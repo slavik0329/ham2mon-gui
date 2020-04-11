@@ -25,7 +25,8 @@ function Call({
       border: "1px solid #eee",
       padding: 6,
       margin: 10,
-      display: 'flex'
+      display: 'flex',
+      borderRadius: 4
     },
     audioBlock: {marginTop: 10},
     audio: {
@@ -41,7 +42,6 @@ function Call({
       fontSize: 30,
       cursor: 'pointer',
       display: 'inline-block',
-
     },
     rightBlock: {
       paddingLeft: 30,
@@ -65,11 +65,11 @@ function Call({
     let bg = "#FFF";
 
     if (listened) {
-      bg = "#ffdf98"
+      bg = "#ffdfc1"
     }
 
     if (selected) {
-      bg = "rgba(81,134,255,0.57)";
+      bg = "#f79c51";
     }
 
     return bg;
@@ -95,7 +95,7 @@ function Call({
         </div>
 
         <div
-          style={{...styles.freq, color: liked ? "#24b13d" : "black"}}
+          style={{...styles.freq, color: liked ? "#0c8e38" : "black"}}
           onClick={(event) => {
             if (!liked) {
               onLike();

@@ -159,6 +159,28 @@ function App() {
                 window.scrollTo(0, document.body.scrollHeight);
               }}
             />
+            {showOnlyFreq ? <BooleanOption
+              title={'Delete Listened'}
+              warning={true}
+              value={showHidden}
+              onClick={async () => {
+                if (!window.confirm("Are you sure you want to delete all listened audio on this freq?")) {
+                  return false;
+                }
+
+                const filesToDelete = calls.filter(call =>
+                  call.freq === showOnlyFreq &&
+                  listenedArr.includes(call.file)
+                ).map(call=>call.file);
+
+                await axios.post(`${serverUrl}delete`, {
+                  files: filesToDelete
+                });
+
+                setShowOnlyFreq('');
+                getData();
+              }}
+            /> : null}
           </div>
           <div>
             <BooleanOption

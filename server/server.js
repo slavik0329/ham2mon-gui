@@ -8,6 +8,8 @@ const app = express();
 const port = 3124;
 
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.get('/', async (req, res) => {
   const fileData = await getFileData();
@@ -28,6 +30,21 @@ try {
   console.log("Error: You must have a configuration file in server path! [config.json]");
   process.exit();
 }
+
+app.post('/delete', async (req, res) => {
+  const {files} = req.body;
+
+  for (let file of files) {
+    try {
+      fs.unlinkSync(wavDir + "/" + file);
+      console.log("Deleted " + file);
+    } catch (e) {
+      console.log("Error deleting file " + file, e);
+    }
+  }
+
+  res.json({});
+});
 
 app.use('/static', express.static(wavDir));
 
