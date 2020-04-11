@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Segment7';
+  src: url('/Segment7Standard.woff2') format('woff2'),
+  url('/Segment7Standard.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+}
