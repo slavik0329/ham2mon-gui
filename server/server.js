@@ -2,7 +2,7 @@ const fs = require('fs');
 const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const cors = require('cors')
-const path = require('path')
+const sanitize = require("sanitize-filename");
 
 const express = require('express');
 const app = express();
@@ -37,7 +37,7 @@ app.post('/delete', async (req, res) => {
 
   for (let file of files) {
     try {
-      fs.unlinkSync(wavDir + "/" + file);
+      fs.unlinkSync(wavDir + "/" + sanitize(file));
       console.log("Deleted " + file);
     } catch (e) {
       console.log("Error deleting file " + file, e);

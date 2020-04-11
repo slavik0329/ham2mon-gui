@@ -258,7 +258,7 @@ function App() {
             }}
             autoPlay={true}
             preload={'none'}
-            src={selected ? `http://localhost:3124/static/${selected}` : null}
+            src={selected ? `${serverUrl}static/${selected}` : null}
             controls
           />
         </div>

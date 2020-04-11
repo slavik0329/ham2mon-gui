@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 
 import produce from "immer"
 import {sec2time} from "./Utils";
+import {BooleanOption} from "./BooleanOption";
 
 function Call({
                 data,
@@ -26,7 +27,8 @@ function Call({
       padding: 6,
       margin: 10,
       display: 'flex',
-      borderRadius: 4
+      borderRadius: 4,
+      cursor: 'pointer'
     },
     audioBlock: {marginTop: 10},
     audio: {
@@ -120,8 +122,9 @@ function Call({
           <b>Size:</b> {size / 1000}kb
         </div>
         <div style={styles.controls}>
-          <div
-            style={styles.control}
+          <BooleanOption
+            title={hidden ? 'Unhide' : 'Hide'}
+            type={'small'}
             onClick={(event) => {
               event.stopPropagation();
               if (hidden) {
@@ -133,11 +136,11 @@ function Call({
                 onHide();
               }
             }}
-          >
-            {hidden ? 'Unhide' : 'Hide'}
-          </div>
-          <div
-            style={styles.control}
+          />
+
+          <BooleanOption
+            title={'Rename'}
+            type={'small'}
             onClick={async (event) => {
               event.stopPropagation();
 
@@ -160,20 +163,17 @@ function Call({
                 setFreqData(tmpFreqData);
               }
             }}
-          >
-            Rename
-          </div>
+          />
 
-          <div
-            style={styles.control}
+          <BooleanOption
+            title={'Mark Read'}
+            type={'small'}
             onClick={async (event) => {
               event.stopPropagation();
 
               handleMarkRead(freq);
             }}
-          >
-            MarkRead
-          </div>
+          />
         </div>
 
       </div>

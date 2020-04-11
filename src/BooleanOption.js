@@ -1,6 +1,6 @@
 import React from "react";
 
-export function BooleanOption({title, value, onClick, warning = false}) {
+export function BooleanOption({title, value, onClick, warning = false, type = 'normal'}) {
   const styles = {
     container: {
       padding: 6,
@@ -8,8 +8,9 @@ export function BooleanOption({title, value, onClick, warning = false}) {
       cursor: "pointer",
       marginBottom: 4,
       marginRight: 8,
-      width: 120,
-      borderRadius: 4
+      width: type === 'small' ? 70 : 120,
+      borderRadius: 4,
+      textAlign: type === 'small'? 'center' : 'left'
     }
   };
 

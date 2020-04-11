@@ -6,6 +6,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dayjs": "^1.8.23",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "sanitize-filename": "^1.6.3"
   }
 }
