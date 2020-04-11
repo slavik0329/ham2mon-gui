@@ -47,7 +47,7 @@ app.post('/delete', async (req, res) => {
   res.json({});
 });
 
-app.use('/static', express.static(path.join(__dirname , wavDir)));
+app.use('/static', express.static(wavDir));
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
 
