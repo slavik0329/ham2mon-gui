@@ -2,6 +2,7 @@ const fs = require('fs');
 const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const cors = require('cors')
+const path = require('path')
 
 const express = require('express');
 const app = express();
@@ -46,7 +47,7 @@ app.post('/delete', async (req, res) => {
   res.json({});
 });
 
-app.use('/static', express.static(__dirname + "../../../../../../../../../" + wavDir));
+app.use('/static', express.static(path.join(__dirname , "/../../../../../.."+wavDir)));
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
 
