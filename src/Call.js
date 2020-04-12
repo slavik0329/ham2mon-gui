@@ -35,8 +35,12 @@ function Call({
       marginLeft: 80
     },
     date: {
+      fontFamily: "Segment7",
+      fontWeight: 'normal',
+      fontStyle: 'italic',
       fontSize: 12,
-      marginBottom: 10
+      marginBottom: 10,
+      textAlign: 'right'
     },
     freq: {
       fontFamily: "Segment7",
@@ -45,6 +49,7 @@ function Call({
       fontSize: 30,
       cursor: 'pointer',
       display: 'inline-block',
+      textAlign: "right"
     },
     rightBlock: {
       paddingLeft: 30,
@@ -95,10 +100,10 @@ function Call({
       <div>
         <div style={styles.date}>
           <div>
-            {dayjs(time * 1000).format('M/D/YYYY')}
+            {dayjs(time * 1000).format('M-D-YYYY')}
           </div>
           <div>
-            {dayjs(time * 1000).format('h:mm:ss A')}
+            {dayjs(time * 1000).format('hh:mm:ss')}
           </div>
         </div>
 

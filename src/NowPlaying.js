@@ -10,11 +10,16 @@ export function NowPlaying({call, freqData}) {
       color: 'rgb(198, 225, 209)',
       backgroundColor: 'rgb(40, 75, 52)',
       borderRadius: 16,
-      display: "flex",
-      padding: "6px 0 6px 0px",
+      display: 'flex',
+      flexDirection: 'column',
       justifyContent: "center",
       marginTop: windowSize.width >= 600 ? "0" : 10,
-      marginBottom: 10
+      marginBottom: 10,
+      height: 104
+    },
+    innerBlock: {
+      display: "flex",
+
     },
     freq: {
       color: 'rgb(198, 225, 209)',
@@ -22,19 +27,30 @@ export function NowPlaying({call, freqData}) {
       fontWeight: 'normal',
       fontStyle: 'italic',
       fontSize: 30,
-      marginBottom: 8
+      textAlign: "center"
     },
     date: {
-      fontSize: 12,
+      fontFamily: "Segment7",
+      fontWeight: 'normal',
+      fontStyle: 'italic',
+      fontSize: 23,
       marginTop: 12,
-      marginBottom: 10
+      marginBottom: 10,
+      textAlign: 'right'
     },
     name: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      textAlign: "center"
     },
     rightBlock: {
       paddingLeft: 20,
-      marginLeft: 40
+      paddingRight: 14,
+      marginLeft: 40,
+      width: "100%"
+    },
+    leftBlock: {
+      paddingLeft: 14,
+      flexGrow: '1'
     },
     nowPlaying: {
       textAlign: "center",
@@ -47,7 +63,7 @@ export function NowPlaying({call, freqData}) {
 
   let callInfo = {
     file: "Not Playing",
-    freq: "NOT PLAYING",
+    freq: <div style={{}}>NOT PLAYING</div>,
     time: 0
   };
 
@@ -58,22 +74,25 @@ export function NowPlaying({call, freqData}) {
   const freqItem = freqData.find(freqItem => freqItem.freq === callInfo.freq);
 
   return <div style={styles.container}>
-    <div style={styles.leftBlock}>
-      <div style={styles.nowPlaying}>
-        Now Playing
-      </div>
+    <div style={styles.innerBlock}>
+      <div style={styles.leftBlock}>
+        <div style={styles.nowPlaying}>
+          {call?'Frequency':''}
+        </div>
 
-      <div style={styles.freq}>
-        {callInfo.freq}
+        <div style={styles.freq}>
+          {callInfo.freq}
+        </div>
       </div>
+      {call ? <div style={styles.rightBlock}>
+        <div style={styles.date}>
+          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format('M-D-YYYY') : null}</div>
+          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format('hh:mm:ss ') : null}</div>
+        </div>
+      </div> : null}
     </div>
-    <div style={styles.rightBlock}>
-      <div style={styles.date}>
-        {callInfo.time ? dayjs(callInfo.time * 1000).format('h:mm:ss A M/D/YYYY') : null}
-      </div>
-      <div style={styles.name}>
-        {freqItem ? freqItem.name : ''}
-      </div>
+    <div style={styles.name}>
+      {freqItem ? freqItem.name : ''}
     </div>
   </div>;
 }
