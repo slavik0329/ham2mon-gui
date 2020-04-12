@@ -176,7 +176,6 @@ function App() {
     })
   };
 
-  console.log("dims", buttonsDimensions)
   return (
     <div>
       <div style={styles.optionsBlock}>

@@ -9,7 +9,6 @@ export function BooleanOption({
                                 containerWidth
                               }
 ) {
-  console.log(containerWidth)
   const styles = {
     container: {
       padding: type === 'small' ? 3 : 6,
