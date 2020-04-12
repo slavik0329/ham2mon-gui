@@ -18,7 +18,6 @@ function Call({
                 onUnhide,
                 freqData,
                 setFreqData,
-                handleMarkRead,
               }) {
 
   const styles = {
@@ -28,7 +27,7 @@ function Call({
       margin: 10,
       display: 'flex',
       borderRadius: 4,
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     audioBlock: {marginTop: 10},
     audio: {
@@ -49,32 +48,30 @@ function Call({
       paddingLeft: 30,
       fontSize: 12
     },
-    controls: {
-      marginTop: 20,
-    },
+    controls: {},
     control: {
       cursor: "pointer",
       display: 'inline-block',
       marginRight: 8
     },
     name: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontSize: 16,
+      marginTop: 4
     }
   };
   const {time, freq, file, size} = data;
 
-  function getBackgroundColor() {
-    let bg = "#FFF";
+  let color = '#284b34';
 
-    if (listened) {
-      bg = "#ffdfc1"
-    }
+  let bg = "#FFF";
 
-    if (selected) {
-      bg = "#f79c51";
-    }
-
-    return bg;
+  if (listened) {
+    // bg = "#ffdfc1";
+    bg = "hsla(29, 100%, 95%, 1)";
+  }
+  if (selected) {
+    bg = "#f79c51";
   }
 
   const freqItem = freqData.find(freqItem => freqItem.freq === freq);
@@ -84,7 +81,8 @@ function Call({
     <div
       style={{
         ...styles.item,
-        backgroundColor: getBackgroundColor()
+        color: color,
+        backgroundColor: bg
       }}
       onClick={(event) => {
         event.stopPropagation();
@@ -97,7 +95,7 @@ function Call({
         </div>
 
         <div
-          style={{...styles.freq, color: liked ? "#0c8e38" : "black"}}
+          style={{...styles.freq, color: liked ? "#f79c51" : "black"}}
           onClick={(event) => {
             if (!liked) {
               onLike();
@@ -110,21 +108,13 @@ function Call({
         >
           {freq}
         </div>
-        <div style={styles.name}>
-          {freqItem ? freqItem.name : ''}
-        </div>
       </div>
       <div style={styles.rightBlock}>
-        <div>
-          <b>Duration:</b> {sec2time(size / 16000)}
-        </div>
-        <div>
-          <b>Size:</b> {size / 1000}kb
-        </div>
         <div style={styles.controls}>
           <BooleanOption
             title={hidden ? 'Unhide' : 'Hide'}
             type={'small'}
+            warning={true}
             onClick={(event) => {
               event.stopPropagation();
               if (hidden) {
@@ -141,6 +131,7 @@ function Call({
           <BooleanOption
             title={'Rename'}
             type={'small'}
+            warning={true}
             onClick={async (event) => {
               event.stopPropagation();
 
@@ -165,17 +156,25 @@ function Call({
             }}
           />
 
-          <BooleanOption
-            title={'Mark Read'}
-            type={'small'}
-            onClick={async (event) => {
-              event.stopPropagation();
+          {/*<BooleanOption*/}
+          {/*  title={'Mark Read'}*/}
+          {/*  type={'small'}*/}
+          {/*  onClick={async (event) => {*/}
+          {/*    event.stopPropagation();*/}
 
-              handleMarkRead(freq);
-            }}
-          />
+          {/*    handleMarkRead(freq);*/}
+          {/*  }}*/}
+          {/*/>*/}
         </div>
-
+        <div>
+          <b>Duration:</b> {sec2time(size / 16000)}
+        </div>
+        <div>
+          <b>Size:</b> {size / 1000}kb
+        </div>
+        <div style={styles.name}>
+          {freqItem ? freqItem.name : ''}
+        </div>
       </div>
       <div>
         {/*audio used to be here*/}

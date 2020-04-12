@@ -4,9 +4,11 @@ import dayjs from "dayjs";
 export function NowPlaying({call, freqData}) {
   const styles = {
     container: {
+      color: '#284b34',
       display: "flex"
     },
     freq: {
+      color: '#f79c51',
       fontFamily: "Segment7",
       fontSize: 30,
       marginBottom: 8

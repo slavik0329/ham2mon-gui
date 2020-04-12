@@ -8,6 +8,10 @@ import {BooleanOption} from "./BooleanOption";
 import {NowPlaying} from "./NowPlaying";
 import {useWindowSize} from "./Utils";
 import {useHotkeys} from 'react-hotkeys-hook';
+import Select from 'react-select'
+
+const serverUrl = 'http://localhost:3124/';
+// const serverUrl = 'http://192.168.1.167:3124/';
 
 function App() {
   const windowSize = useWindowSize();
@@ -31,11 +35,14 @@ function App() {
       flexGrow: 1
     },
     records: {
-      paddingTop: windowSize.width >= 600 ? 140 : 242
+      paddingTop: windowSize.width >= 600 ? 158 : 350
     },
     audio: {
       width: "100%",
       userSelect: "none",
+      outline: 0
+    },
+    select: {
       outline: 0
     }
   };
@@ -72,7 +79,7 @@ function App() {
   }, []);
 
   const getData = async () => {
-    const result = await axios.get('http://localhost:3124/');
+    const result = await axios.get(serverUrl);
     setCalls(result.data);
   };
 
@@ -109,7 +116,7 @@ function App() {
     const nextCall = filteredCalls[selectedCallIndex + skipAmount];
 
     try {
-      filteredCallRefs.current[selectedCallIndex + skipAmount].scrollIntoView({block: 'end'});
+      filteredCallRefs.current[selectedCallIndex + skipAmount].scrollIntoView({block: 'center'});
     } catch (e) {
 
     }
@@ -134,11 +141,29 @@ function App() {
     }
   }
 
-  useHotkeys('k', () => playNext(), {}, [selected, listenedArr, filteredCalls, filteredCallRefs]);
-  useHotkeys('j', () => playNext(-1), {}, [selected, listenedArr, filteredCalls]);
+  useHotkeys('k,down', () => playNext(), {}, [selected, listenedArr, filteredCalls, filteredCallRefs]);
+  useHotkeys('j,up', () => playNext(-1), {}, [selected, listenedArr, filteredCalls]);
   useHotkeys('space', (event) => pause(event), {}, [audioRef, playing]);
-  useHotkeys('shift+k', () => window.scrollTo(0, document.body.scrollHeight));
-  useHotkeys('shift+j', () => window.scrollTo(0, 0));
+  useHotkeys('shift+k,shift+down', () => window.scrollTo(0, document.body.scrollHeight));
+  useHotkeys('shift+j,shift+up', () => window.scrollTo(0, 0));
+
+  let selectOptions = frequencyListItems.map(freqItem => ({
+    value: freqItem.freq,
+    label: `${freqItem.freq} ${freqItem.name ? freqItem.name: ''} (${freqItem.unlistenedCount})`
+  }));
+
+  selectOptions = [
+    {value: "", label: `No filter (${calls.length})`},
+    ...selectOptions
+  ];
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      boxShadow: "none",
+      borderColor: "#EEE !important"
+    })
+  };
 
   return (
     <div>
@@ -154,24 +179,31 @@ function App() {
             />
             <BooleanOption
               title={'Scroll to Bottom'}
-              value={showHidden}
               onClick={() => {
                 window.scrollTo(0, document.body.scrollHeight);
               }}
             />
-            {showOnlyFreq ? <BooleanOption
+
+            <BooleanOption
               title={'Delete Listened'}
               warning={true}
-              value={showHidden}
               onClick={async () => {
-                if (!window.confirm("Are you sure you want to delete all listened audio on this freq?")) {
+                if (!window.confirm(`Are you sure you want to delete all listened audio${showOnlyFreq ? ' on this freq?' : "?"}`)) {
                   return false;
                 }
 
-                const filesToDelete = calls.filter(call =>
-                  call.freq === showOnlyFreq &&
-                  listenedArr.includes(call.file)
-                ).map(call=>call.file);
+                let filesToDelete;
+
+                if (showOnlyFreq) {
+                  filesToDelete = calls.filter(call =>
+                    call.freq === showOnlyFreq &&
+                    listenedArr.includes(call.file)
+                  ).map(call => call.file);
+                } else {
+                  filesToDelete = calls.filter(call =>
+                    listenedArr.includes(call.file)
+                  ).map(call => call.file);
+                }
 
                 await axios.post(`${serverUrl}delete`, {
                   files: filesToDelete
@@ -180,7 +212,7 @@ function App() {
                 setShowOnlyFreq('');
                 getData();
               }}
-            /> : null}
+            />
           </div>
           <div>
             <BooleanOption
@@ -192,9 +224,32 @@ function App() {
             />
             <BooleanOption
               title={'Scroll to Top'}
-              value={showHidden}
               onClick={() => {
                 window.scrollTo(0, 0);
+              }}
+            />
+            <BooleanOption
+              title={'Mark Read'}
+              warning={true}
+              onClick={async () => {
+                if (!window.confirm(`Are you sure you want to mark ${showOnlyFreq ? "this frequency" : "all calls"} as read?`)) {
+                  return false;
+                }
+
+                let itemsToMark;
+
+                if (showOnlyFreq) {
+                  itemsToMark = unlistenedCalls.filter(call => call.freq === showOnlyFreq);
+                } else {
+                  itemsToMark = calls;
+                }
+                const tmpListenedArr = await produce(listenedArr, async (draft) => {
+                  itemsToMark.forEach((call) => {
+                    draft.push(call.file);
+                  })
+                });
+
+                setListenedArr(tmpListenedArr);
               }}
             />
           </div>
@@ -208,34 +263,36 @@ function App() {
             />
             <BooleanOption
               title={'Skip call'}
-              value={showHidden}
               onClick={() => {
                 playNext();
               }}
             />
           </div>
           <div>
-            <select
-              value={showOnlyFreq}
-              onChange={(event) => {
-                setShowOnlyFreq(event.target.value === 'No filter' ? '' : event.target.value);
+
+            <Select
+              style={styles.select}
+              value={selectOptions.find(option=>option.value === showOnlyFreq)}
+              placeholder={"Select a frequency"}
+              options={selectOptions}
+              styles={customStyles}
+              theme={theme => ({
+                ...theme,
+                borderRadius: 0,
+                colors: {
+                  ...theme.colors,
+                  primary25: '#ffdfc1',
+                  primary: '#f79c51',
+                },
+              })}
+              onChange={(res) => {
+                setShowOnlyFreq(res.label === 'No filter' ? '' : res.value);
 
                 setTimeout(() => {
                   window.scrollTo(0, document.body.scrollHeight);
                 }, 200)
               }}
-            >
-              <option key={0} value={null}>No filter</option>
-              {frequencyListItems.map(freqItem => (
-                <option
-                  key={freqItem.freq}
-                  value={freqItem.freq}
-                >
-                  {freqItem.freq} {freqItem.name ? `(${freqItem.name})` : null}
-                  ({freqItem.unlistenedCount})
-                </option>
-              ))}
-            </select>
+            />
           </div>
         </div>
         <div style={styles.rightOptionsBlock}>
@@ -256,7 +313,7 @@ function App() {
 
               playNext();
             }}
-            autoPlay={true}
+            autoPlay={autoplay}
             preload={'none'}
             src={selected ? `${serverUrl}static/${selected}` : null}
             controls
