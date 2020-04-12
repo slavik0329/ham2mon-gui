@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {useWindowSize} from "./Utils";
 import {secondary, secondary25} from "./color";
@@ -36,7 +36,8 @@ export function NowPlaying({call, freqData}) {
       fontSize: 23,
       marginTop: 12,
       marginBottom: 10,
-      textAlign: 'right'
+      textAlign: 'right',
+      width: windowSize.width >= 600 ? "auto" : 135
     },
     name: {
       fontWeight: '500',
@@ -62,6 +63,20 @@ export function NowPlaying({call, freqData}) {
     }
   };
 
+  const [tickOn, setTickOn] = useState(true);
+  const tickRef = useState(true);
+
+  function tick() {
+    tickRef.current = !tickRef.current;
+    setTickOn(tickRef.current);
+
+    setTimeout(tick, 1000);
+  }
+
+  useEffect(()=> {
+    tick();
+  }, []);
+
   let callInfo = {
     file: "Not Playing",
     freq: <div style={{}}>NOT PLAYING</div>,
@@ -78,7 +93,7 @@ export function NowPlaying({call, freqData}) {
     <div style={styles.innerBlock}>
       <div style={styles.leftBlock}>
         <div style={styles.nowPlaying}>
-          {call?'Now Playing':''}
+          {call ? 'Now Playing' : ''}
         </div>
 
         <div style={styles.freq}>
@@ -88,7 +103,7 @@ export function NowPlaying({call, freqData}) {
       {call ? <div style={styles.rightBlock}>
         <div style={styles.date}>
           <div>{callInfo.time ? dayjs(callInfo.time * 1000).format('M-D-YYYY') : null}</div>
-          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format('hh:mm:ss ') : null}</div>
+          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format(tickOn?'hh:mm:ss':'hh mm ss') : null}</div>
         </div>
       </div> : null}
     </div>

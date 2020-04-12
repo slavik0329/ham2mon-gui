@@ -1,4 +1,33 @@
-import React from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {secondary} from "./color";
+
+
+function useHover() {
+  const [value, setValue] = useState(false);
+
+  const ref = useRef(null);
+
+  const handleMouseOver = () => setValue(true);
+  const handleMouseOut = () => setValue(false);
+
+  useEffect(
+    () => {
+      const node = ref.current;
+      if (node) {
+        node.addEventListener('mouseover', handleMouseOver);
+        node.addEventListener('mouseout', handleMouseOut);
+
+        return () => {
+          node.removeEventListener('mouseover', handleMouseOver);
+          node.removeEventListener('mouseout', handleMouseOut);
+        };
+      }
+    },
+    [ref.current] // Recall only if ref changes
+  );
+
+  return [ref, value];
+}
 
 export function BooleanOption({
                                 title,
@@ -9,6 +38,8 @@ export function BooleanOption({
                                 containerWidth
                               }
 ) {
+  const [hoverRef, isHovered] = useHover();
+
   const styles = {
     container: {
       padding: type === 'small' ? 3 : 6,
@@ -19,12 +50,13 @@ export function BooleanOption({
       marginRight: type === 'small' ? 8 : 0,
       width: type === 'small' ? 60 : (containerWidth / 2) - 4,
       borderRadius: 4,
+      border: isHovered?`1px solid ${secondary}`:'1px solid rgba(0,0,0,0)',
       textAlign: type === 'small' ? 'center' : 'left'
     }
   };
 
   let backgroundColor = "#c6e1d1";
-  let color = "#000";
+  let color = secondary;
 
   if (value) {
     backgroundColor = '#284b34';
@@ -37,6 +69,7 @@ export function BooleanOption({
   }
 
   return <div
+    ref={hoverRef}
     style={{...styles.container, backgroundColor: backgroundColor, color: color}}
     onClick={onClick}
   >

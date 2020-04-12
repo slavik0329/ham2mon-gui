@@ -10,7 +10,7 @@ import {useWindowSize} from "./Utils";
 import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
-import {primary, primary25} from "./color";
+import {primary, primary2, secondary25} from "./color";
 
 // const serverUrl = 'http://localhost:3124/';
 
@@ -18,6 +18,7 @@ const serverUrl = 'http://192.168.1.167:3124/';
 
 function App() {
   const windowSize = useWindowSize();
+  const [optionsBlockRef, optionsBlockDimensions] = useDimensions();
 
   const styles = {
     optionsBlock: {
@@ -32,20 +33,23 @@ function App() {
       borderBottom: "1px solid #eee",
     },
     leftOptionsBlock: {
-      marginRight: 20,
+      marginRight: 8,
       width: windowSize.width >= 600 ? "40%" : '100%',
+    },
+    rightOptionsBlock: {
+      marginRight: 24,
+      flexGrow: 1,
+      backgroundColor: secondary25,
+      padding: 10,
+      borderRadius: 4
     },
     buttons: {
       display: "flex",
       justifyContent: "space-between",
       flexWrap: "wrap"
     },
-    rightOptionsBlock: {
-      marginRight: 24,
-      flexGrow: 1
-    },
     records: {
-      paddingTop: windowSize.width >= 600 ? 208 : 392
+      paddingTop: optionsBlockDimensions.height ? optionsBlockDimensions.height + 10 : 0
     },
     audio: {
       width: "100%",
@@ -65,7 +69,7 @@ function App() {
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
   const [likedArr, setLikedArr] = useLocalStorage('likedArr', []);
   const [hiddenArr, setHiddenArr] = useLocalStorage('hiddenArr', []);
-  const [autoplay, setAutoplay] = useLocalStorage('autoplay', false);
+  const [autoplay, setAutoplay] = useLocalStorage('autoplay', true);
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
 
@@ -75,6 +79,7 @@ function App() {
   const filteredCallRefs = useRef([]);
 
   const [buttonsRef, buttonsDimensions] = useDimensions();
+
   const selectedCall = calls.find(call => call.file === selected);
   const allFreqs = calls.map(call => call.freq);
 
@@ -110,23 +115,24 @@ function App() {
       setShowOnlyFreq(frequencyListItems[0].freq);
     }
   }, [frequencyListItems, showOnlyFreq]);
+
   let filteredCalls = calls.filter(call => !hiddenArr.includes(call.freq));
+
   if (showHidden) {
     filteredCalls = calls.filter(call => hiddenArr.includes(call.freq));
-
   }
+
   if (showOnlyFreq) {
     filteredCalls = filteredCalls.filter(call => call.freq === showOnlyFreq);
-
   }
+
   if (!showRead) {
     filteredCalls = filteredCalls.filter(call => !listenedArr.includes(call.file));
-
   }
 
   useEffect(() => {
     filteredCallRefs.current = new Array(filteredCalls.length);
-  }, []);
+  }, [filteredCalls]);
 
   const playNext = (skipAmount = 1) => {
     const selectedCallIndex = filteredCalls.findIndex(call => call.file === selected);
@@ -175,18 +181,31 @@ function App() {
     control: (base, state) => ({
       ...base,
       boxShadow: "none",
-      borderColor: "#EEE !important"
+      borderColor: "#EEE !important",
+      height: 44,
+      marginBottom: windowSize.width >= 600 ? 0 : 4
     })
   };
 
   return (
     <div>
-      <div style={styles.optionsBlock}>
+      <div
+        ref={optionsBlockRef}
+        style={styles.optionsBlock}
+      >
         <div style={styles.leftOptionsBlock}>
           <div
             ref={buttonsRef}
             style={styles.buttons}
           >
+            <BooleanOption
+              title={'Autoplay'}
+              containerWidth={buttonsDimensions.width}
+              value={autoplay}
+              onClick={() => {
+                setAutoplay(!autoplay);
+              }}
+            />
             <BooleanOption
               title={'Show Hidden'}
               containerWidth={buttonsDimensions.width}
@@ -215,14 +234,6 @@ function App() {
               containerWidth={buttonsDimensions.width}
               onClick={() => {
                 window.scrollTo(0, 0);
-              }}
-            />
-            <BooleanOption
-              title={'Autoplay'}
-              containerWidth={buttonsDimensions.width}
-              value={autoplay}
-              onClick={() => {
-                setAutoplay(!autoplay);
               }}
             />
             <BooleanOption
@@ -300,7 +311,7 @@ function App() {
                 borderRadius: 4,
                 colors: {
                   ...theme.colors,
-                  primary25: primary25,
+                  primary25: primary2,
                   primary: primary,
                 },
               })}
