@@ -23,7 +23,7 @@ function Call({
   const styles = {
     item: {
       border: "1px solid #eee",
-      padding: 6,
+      padding: "4px 6px",
       margin: "4px 4px",
       display: 'flex',
       borderRadius: 4,
@@ -38,8 +38,9 @@ function Call({
       fontFamily: "Segment7",
       fontWeight: 'normal',
       fontStyle: 'italic',
-      fontSize: 12,
+      fontSize: 15,
       marginBottom: 10,
+      marginTop:9,
       textAlign: 'right'
     },
     freq: {
@@ -55,11 +56,13 @@ function Call({
       paddingLeft: 30,
       fontSize: 12
     },
-    controls: {},
+    controls: {
+      marginTop: 4
+    },
     control: {
       cursor: "pointer",
       display: 'inline-block',
-      marginRight: 8
+      marginRight: 8,
     },
     name: {
       fontWeight: 'bold',
@@ -123,6 +126,15 @@ function Call({
         </div>
       </div>
       <div style={styles.rightBlock}>
+        <div style={styles.name}>
+          {freqItem ? freqItem.name : ''}
+        </div>
+        <div>
+          <b>Duration:</b> {sec2time(size / 16000)}
+        </div>
+        <div>
+          <b>Size:</b> {size / 1000}kb
+        </div>
         <div style={styles.controls}>
           <BooleanOption
             title={hidden ? 'Unhide' : 'Hide'}
@@ -178,15 +190,6 @@ function Call({
           {/*    handleMarkRead(freq);*/}
           {/*  }}*/}
           {/*/>*/}
-        </div>
-        <div>
-          <b>Duration:</b> {sec2time(size / 16000)}
-        </div>
-        <div>
-          <b>Size:</b> {size / 1000}kb
-        </div>
-        <div style={styles.name}>
-          {freqItem ? freqItem.name : ''}
         </div>
       </div>
       <div>

@@ -44,7 +44,7 @@ function App() {
       flexGrow: 1
     },
     records: {
-      paddingTop: windowSize.width >= 600 ? 208 : 372
+      paddingTop: windowSize.width >= 600 ? 208 : 392
     },
     audio: {
       width: "100%",
@@ -52,7 +52,7 @@ function App() {
       outline: 0
     },
     select: {
-      outline: 0
+      outline: 0,
     }
   };
 
@@ -295,7 +295,7 @@ function App() {
               styles={customStyles}
               theme={theme => ({
                 ...theme,
-                borderRadius: 0,
+                borderRadius: 4,
                 colors: {
                   ...theme.colors,
                   primary25: '#ffdfc1',
