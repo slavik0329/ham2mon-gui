@@ -44,7 +44,7 @@ function App() {
       flexGrow: 1
     },
     records: {
-      paddingTop: windowSize.width >= 600 ? 190 : 326
+      paddingTop: windowSize.width >= 600 ? 196 : 326
     },
     audio: {
       width: "100%",

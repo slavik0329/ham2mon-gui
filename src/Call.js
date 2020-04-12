@@ -24,7 +24,7 @@ function Call({
     item: {
       border: "1px solid #eee",
       padding: 6,
-      margin: 10,
+      margin: "4px 4px",
       display: 'flex',
       borderRadius: 4,
       cursor: 'pointer',
@@ -63,15 +63,15 @@ function Call({
   const {time, freq, file, size} = data;
 
   let color = '#284b34';
-
   let bg = "#FFF";
+  let border = '2px solid #FFF';
 
   if (listened) {
     // bg = "#ffdfc1";
     bg = "hsla(29, 100%, 95%, 1)";
   }
   if (selected) {
-    bg = "#f79c51";
+    border = "2px solid #f79c51";
   }
 
   const freqItem = freqData.find(freqItem => freqItem.freq === freq);
@@ -82,7 +82,8 @@ function Call({
       style={{
         ...styles.item,
         color: color,
-        backgroundColor: bg
+        backgroundColor: bg,
+        border: border
       }}
       onClick={(event) => {
         event.stopPropagation();
