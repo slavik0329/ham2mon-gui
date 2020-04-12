@@ -10,12 +10,14 @@ import {useWindowSize} from "./Utils";
 import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
+import {primary, primary25} from "./color";
 
 // const serverUrl = 'http://localhost:3124/';
 
 const serverUrl = 'http://192.168.1.167:3124/';
 
 function App() {
+
   const windowSize = useWindowSize();
 
   const styles = {
@@ -55,11 +57,10 @@ function App() {
       outline: 0,
     }
   };
-
   const [calls, setCalls] = useState([]);
   const [selected, setSelected] = useState(null);
-  const [playing, setPlaying] = useState(false);
 
+  const [playing, setPlaying] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
   const [likedArr, setLikedArr] = useLocalStorage('likedArr', []);
@@ -67,31 +68,32 @@ function App() {
   const [autoplay, setAutoplay] = useLocalStorage('autoplay', false);
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
-  const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
 
+  const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
   const audioRef = useRef(null);
+
   const filteredCallRefs = useRef([]);
 
   const [buttonsRef, buttonsDimensions] = useDimensions();
-
   const selectedCall = calls.find(call => call.file === selected);
   const allFreqs = calls.map(call => call.freq);
+
   const uniqueFreqs = [...new Set(allFreqs)];
 
   const unlistenedCalls = calls.filter(call => !listenedArr.includes(call.file));
-
   let filteredFreqs = uniqueFreqs.filter(freq => !hiddenArr.includes(freq));
   if (showHidden) {
     filteredFreqs = uniqueFreqs.filter(freq => hiddenArr.includes(freq));
+
   }
 
   useEffect(() => {
     getData();
   }, []);
-
   const getData = async () => {
     const result = await axios.get(serverUrl);
     setCalls(result.data);
+
   };
 
   const frequencyListItems = filteredFreqs.map(freq => {
@@ -110,26 +112,26 @@ function App() {
       setShowOnlyFreq(frequencyListItems[0].freq);
     }
   }, [frequencyListItems, showOnlyFreq]);
-
   let filteredCalls = calls.filter(call => !hiddenArr.includes(call.freq));
   if (showHidden) {
     filteredCalls = calls.filter(call => hiddenArr.includes(call.freq));
-  }
 
+  }
   if (showOnlyFreq) {
     filteredCalls = filteredCalls.filter(call => call.freq === showOnlyFreq);
-  }
 
+  }
   if (!showRead) {
     filteredCalls = filteredCalls.filter(call => !listenedArr.includes(call.file));
+
   }
 
   useEffect(() => {
     filteredCallRefs.current = new Array(filteredCalls.length);
   }, []);
-
   const playNext = (skipAmount = 1) => {
     const selectedCallIndex = filteredCalls.findIndex(call => call.file === selected);
+
     const nextCall = filteredCalls[selectedCallIndex + skipAmount];
 
     try {
@@ -137,7 +139,6 @@ function App() {
     } catch (e) {
 
     }
-
     if (nextCall) {
       setSelected(nextCall.file);
       setListenedArr([
@@ -145,23 +146,24 @@ function App() {
         nextCall.file
       ]);
     }
+
   };
 
   function pause(event) {
-
     event.preventDefault();
-    if (playing) {
 
+    if (playing) {
       audioRef.current.pause();
     } else {
       audioRef.current.play();
     }
-  }
 
+  }
   useHotkeys('k,down', () => playNext(), {}, [selected, listenedArr, filteredCalls, filteredCallRefs]);
   useHotkeys('j,up', () => playNext(-1), {}, [selected, listenedArr, filteredCalls]);
   useHotkeys('space', (event) => pause(event), {}, [audioRef, playing]);
   useHotkeys('shift+k,shift+down', () => window.scrollTo(0, document.body.scrollHeight));
+
   useHotkeys('shift+j,shift+up', () => window.scrollTo(0, 0));
 
   const selectOptions = frequencyListItems.map(freqItem => ({
@@ -176,7 +178,6 @@ function App() {
       borderColor: "#EEE !important"
     })
   };
-
   return (
     <div>
       <div style={styles.optionsBlock}>
@@ -298,8 +299,8 @@ function App() {
                 borderRadius: 4,
                 colors: {
                   ...theme.colors,
-                  primary25: '#ffdfc1',
-                  primary: '#f79c51',
+                  primary25: primary25,
+                  primary: primary,
                 },
               })}
               onChange={(res) => {

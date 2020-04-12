@@ -1,14 +1,14 @@
 import React from "react";
 import dayjs from "dayjs";
 import {useWindowSize} from "./Utils";
+import {secondary, secondary25} from "./color";
 
 export function NowPlaying({call, freqData}) {
   const windowSize = useWindowSize();
-
   const styles = {
     container: {
-      color: 'rgb(198, 225, 209)',
-      backgroundColor: 'rgb(40, 75, 52)',
+      color: secondary25,
+      backgroundColor: secondary,
       borderRadius: 16,
       display: 'flex',
       flexDirection: 'column',
@@ -22,7 +22,7 @@ export function NowPlaying({call, freqData}) {
 
     },
     freq: {
-      color: 'rgb(198, 225, 209)',
+      color: secondary25,
       fontFamily: "Segment7",
       fontWeight: 'normal',
       fontStyle: 'italic',
