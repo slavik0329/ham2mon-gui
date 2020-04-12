@@ -108,7 +108,10 @@ export function NowPlaying({call, freqData}) {
       </div> : null}
     </div>
     <div style={styles.name}>
-      {freqItem ? freqItem.name : ''}
+      <marquee scrollamount={4} behavior={'scroll'}>
+        {freqItem ? freqItem.name : ''}
+      </marquee>
+
     </div>
   </div>;
 }
