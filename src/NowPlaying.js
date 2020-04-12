@@ -16,7 +16,8 @@ export function NowPlaying({call, freqData}) {
       justifyContent: "center",
       marginTop: windowSize.width >= 600 ? "0" : 10,
       marginBottom: 10,
-      height: 112
+      height: 112,
+      boxShadow: "1px 1px 2px #999",
     },
     innerBlock: {
       display: "flex",

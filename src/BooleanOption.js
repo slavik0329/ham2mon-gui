@@ -51,7 +51,8 @@ export function BooleanOption({
       width: type === 'small' ? 60 : (containerWidth / 2) - 4,
       borderRadius: 4,
       border: isHovered?`1px solid ${secondary}`:'1px solid rgba(0,0,0,0)',
-      textAlign: type === 'small' ? 'center' : 'left'
+      textAlign: type === 'small' ? 'center' : 'left',
+      boxShadow: "1px 1px 2px #999",
     }
   };
 

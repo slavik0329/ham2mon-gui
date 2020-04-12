@@ -11,6 +11,7 @@ import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
 import {primary, primary2, secondary25} from "./color";
+import ReactList from 'react-list';
 
 // const serverUrl = 'http://localhost:3124/';
 
@@ -31,6 +32,8 @@ function App() {
       backgroundColor: "#FFF",
       width: "100%",
       borderBottom: "1px solid #eee",
+      zIndex: 1000,
+      boxShadow: '1px 1px 2px #adadad'
     },
     leftOptionsBlock: {
       marginRight: 8,
@@ -41,7 +44,8 @@ function App() {
       flexGrow: 1,
       backgroundColor: secondary25,
       padding: 10,
-      borderRadius: 4
+      borderRadius: 4,
+      boxShadow: "1px 1px 2px #999",
     },
     buttons: {
       display: "flex",
@@ -54,7 +58,9 @@ function App() {
     audio: {
       width: "100%",
       userSelect: "none",
-      outline: 0
+      outline: 0,
+      boxShadow: "1px 1px 2px #999",
+      borderRadius: 30
     },
     select: {
       outline: 0,
@@ -223,10 +229,10 @@ function App() {
               }}
             />
             <BooleanOption
-              title={'Scroll to Bottom'}
+              title={'Skip call'}
               containerWidth={buttonsDimensions.width}
               onClick={() => {
-                window.scrollTo(0, document.body.scrollHeight);
+                playNext();
               }}
             />
             <BooleanOption
@@ -237,10 +243,10 @@ function App() {
               }}
             />
             <BooleanOption
-              title={'Skip call'}
+              title={'Scroll to Bottom'}
               containerWidth={buttonsDimensions.width}
               onClick={() => {
-                playNext();
+                window.scrollTo(0, document.body.scrollHeight);
               }}
             />
             <BooleanOption
@@ -352,63 +358,73 @@ function App() {
       </div>
 
       <div style={styles.records}>
-        {filteredCalls.map((call, i) => (
-          <div
-            key={i}
-            ref={el => filteredCallRefs.current[i] = el}
-          >
-            <Call
-              data={call}
-              autoplay={autoplay}
-              selected={selected === call.file}
-              listened={listenedArr.includes(call.file)}
-              hidden={hiddenArr.includes(call.freq)}
-              liked={likedArr.includes(call.freq)}
-              freqData={freqData}
-              setFreqData={setFreqData}
-              onClick={() => {
-                setSelected(call.file);
+        <ReactList
+          itemRenderer={(index, key) => {
+            const call = filteredCalls[index];
 
-                setListenedArr([
-                  ...listenedArr,
-                  call.file
-                ]);
-              }}
-              onLike={() => {
-                setLikedArr([
-                  ...likedArr,
-                  call.freq
-                ]);
-              }}
-              onHide={() => {
-                setHiddenArr([
-                  ...hiddenArr,
-                  call.freq
-                ]);
-              }}
-              onUnhide={() => {
-                setHiddenArr(hiddenArr.filter(freq => freq !== call.freq));
-              }}
-              onUnlike={() => {
-                setLikedArr(likedArr.filter(freq => freq !== call.freq));
-              }}
-              handleMarkRead={async (freq) => {
-                if (!window.confirm("Are you sure you want to mark all as read?")) {
-                  return false;
-                }
+            return (
 
-                const itemsToMark = unlistenedCalls.filter(call => call.freq === freq);
-                const tmpListenedArr = await produce(listenedArr, async (draft) => {
-                  itemsToMark.forEach((call) => {
-                    draft.push(call.file);
-                  })
-                });
+              <div
+                key={index}
+                ref={el => filteredCallRefs.current[index] = el}
+              >
+                <Call
+                  data={call}
+                  autoplay={autoplay}
+                  selected={selected === call.file}
+                  listened={listenedArr.includes(call.file)}
+                  hidden={hiddenArr.includes(call.freq)}
+                  liked={likedArr.includes(call.freq)}
+                  freqData={freqData}
+                  setFreqData={setFreqData}
+                  onClick={() => {
+                    setSelected(call.file);
 
-                setListenedArr(tmpListenedArr);
-              }}
-            />
-          </div>
-        ))}
+                    setListenedArr([
+                      ...listenedArr,
+                      call.file
+                    ]);
+                  }}
+                  onLike={() => {
+                    setLikedArr([
+                      ...likedArr,
+                      call.freq
+                    ]);
+                  }}
+                  onHide={() => {
+                    setHiddenArr([
+                      ...hiddenArr,
+                      call.freq
+                    ]);
+                  }}
+                  onUnhide={() => {
+                    setHiddenArr(hiddenArr.filter(freq => freq !== call.freq));
+                  }}
+                  onUnlike={() => {
+                    setLikedArr(likedArr.filter(freq => freq !== call.freq));
+                  }}
+                  handleMarkRead={async (freq) => {
+                    if (!window.confirm("Are you sure you want to mark all as read?")) {
+                      return false;
+                    }
+
+                    const itemsToMark = unlistenedCalls.filter(call => call.freq === freq);
+                    const tmpListenedArr = await produce(listenedArr, async (draft) => {
+                      itemsToMark.forEach((call) => {
+                        draft.push(call.file);
+                      })
+                    });
+
+                    setListenedArr(tmpListenedArr);
+                  }}
+                />
+              </div>
+            );
+          }}
+          minSize={50}
+          length={filteredCalls.length}
+          type='uniform'
+        />
       </div>
     </div>
   );
