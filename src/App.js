@@ -44,7 +44,7 @@ function App() {
       flexGrow: 1
     },
     records: {
-      paddingTop: windowSize.width >= 600 ? 196 : 326
+      paddingTop: windowSize.width >= 600 ? 196 : 360
     },
     audio: {
       width: "100%",
@@ -105,6 +105,12 @@ function App() {
     };
   });
 
+  useEffect(()=> {
+    if (!showOnlyFreq && frequencyListItems.length) {
+      setShowOnlyFreq(frequencyListItems[0].freq);
+    }
+  }, [frequencyListItems, showOnlyFreq]);
+
   let filteredCalls = calls.filter(call => !hiddenArr.includes(call.freq));
   if (showHidden) {
     filteredCalls = calls.filter(call => hiddenArr.includes(call.freq));
@@ -158,15 +164,10 @@ function App() {
   useHotkeys('shift+k,shift+down', () => window.scrollTo(0, document.body.scrollHeight));
   useHotkeys('shift+j,shift+up', () => window.scrollTo(0, 0));
 
-  let selectOptions = frequencyListItems.map(freqItem => ({
+  const selectOptions = frequencyListItems.map(freqItem => ({
     value: freqItem.freq,
     label: `${freqItem.freq} ${freqItem.name ? freqItem.name : ''} (${freqItem.unlistenedCount})`
   }));
-
-  selectOptions = [
-    {value: "", label: `No filter (${calls.length})`},
-    ...selectOptions
-  ];
 
   const customStyles = {
     control: (base, state) => ({
@@ -260,7 +261,7 @@ function App() {
               }}
             />
             <BooleanOption
-              title={'Mark Read'}
+              title={'Mark Listened'}
               containerWidth={buttonsDimensions.width}
               warning={true}
               onClick={async () => {

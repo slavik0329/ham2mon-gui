@@ -40,6 +40,8 @@ function Call({
     },
     freq: {
       fontFamily: "Segment7",
+      fontWeight: 'normal',
+      fontStyle: 'italic',
       fontSize: 30,
       cursor: 'pointer',
       display: 'inline-block',

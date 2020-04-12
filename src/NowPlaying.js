@@ -19,6 +19,8 @@ export function NowPlaying({call, freqData}) {
     freq: {
       color: 'rgb(198, 225, 209)',
       fontFamily: "Segment7",
+      fontWeight: 'normal',
+      fontStyle: 'italic',
       fontSize: 30,
       marginBottom: 8
     },
@@ -56,18 +58,18 @@ export function NowPlaying({call, freqData}) {
   const freqItem = freqData.find(freqItem => freqItem.freq === callInfo.freq);
 
   return <div style={styles.container}>
-   <div style={styles.leftBlock}>
-     <div style={styles.nowPlaying}>
-       Now Playing
-     </div>
+    <div style={styles.leftBlock}>
+      <div style={styles.nowPlaying}>
+        Now Playing
+      </div>
 
-     <div style={styles.freq}>
-       {callInfo.freq}
-     </div>
-   </div>
+      <div style={styles.freq}>
+        {callInfo.freq}
+      </div>
+    </div>
     <div style={styles.rightBlock}>
       <div style={styles.date}>
-        {callInfo.time?dayjs(callInfo.time * 1000).format('h:mm:ss A M/D/YYYY'):null}
+        {callInfo.time ? dayjs(callInfo.time * 1000).format('h:mm:ss A M/D/YYYY') : null}
       </div>
       <div style={styles.name}>
         {freqItem ? freqItem.name : ''}
