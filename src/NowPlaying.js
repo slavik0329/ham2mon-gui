@@ -1,11 +1,16 @@
 import React from "react";
 import dayjs from "dayjs";
+import {useWindowSize} from "./Utils";
 
 export function NowPlaying({call, freqData}) {
+  const windowSize = useWindowSize();
+
   const styles = {
     container: {
       color: '#284b34',
-      display: "flex"
+      display: "flex",
+      justifyContent: "center",
+      paddingTop: windowSize.width >= 600 ? "0" : 10,
     },
     freq: {
       color: '#f79c51',

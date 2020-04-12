@@ -9,8 +9,10 @@ import {NowPlaying} from "./NowPlaying";
 import {useWindowSize} from "./Utils";
 import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
+import useDimensions from 'react-use-dimensions';
 
 const serverUrl = 'http://localhost:3124/';
+
 // const serverUrl = 'http://192.168.1.167:3124/';
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
       position: 'fixed',
       display: "flex",
       flexWrap: "wrap",
+      justifyContent: "space-around",
       top: 0,
       padding: 10,
       backgroundColor: "#FFF",
@@ -28,14 +31,20 @@ function App() {
       borderBottom: "1px solid #eee",
     },
     leftOptionsBlock: {
-      marginRight: 20
+      marginRight: 20,
+      width: windowSize.width >= 600 ? "40%" : '100%',
+    },
+    buttons: {
+      display: "flex",
+      justifyContent: "space-between",
+      flexWrap: "wrap"
     },
     rightOptionsBlock: {
       marginRight: 24,
       flexGrow: 1
     },
     records: {
-      paddingTop: windowSize.width >= 600 ? 158 : 350
+      paddingTop: windowSize.width >= 600 ? 190 : 326
     },
     audio: {
       width: "100%",
@@ -62,6 +71,8 @@ function App() {
 
   const audioRef = useRef(null);
   const filteredCallRefs = useRef([]);
+
+  const [buttonsRef, buttonsDimensions] = useDimensions();
 
   const selectedCall = calls.find(call => call.file === selected);
   const allFreqs = calls.map(call => call.freq);
@@ -149,7 +160,7 @@ function App() {
 
   let selectOptions = frequencyListItems.map(freqItem => ({
     value: freqItem.freq,
-    label: `${freqItem.freq} ${freqItem.name ? freqItem.name: ''} (${freqItem.unlistenedCount})`
+    label: `${freqItem.freq} ${freqItem.name ? freqItem.name : ''} (${freqItem.unlistenedCount})`
   }));
 
   selectOptions = [
@@ -165,27 +176,63 @@ function App() {
     })
   };
 
+  console.log("dims", buttonsDimensions)
   return (
     <div>
       <div style={styles.optionsBlock}>
         <div style={styles.leftOptionsBlock}>
-          <div>
+          <div
+            ref={buttonsRef}
+            style={styles.buttons}
+          >
             <BooleanOption
               title={'Show Hidden'}
+              containerWidth={buttonsDimensions.width}
               value={showHidden}
               onClick={() => {
                 setShowHidden(!showHidden);
               }}
             />
             <BooleanOption
+              title={'Hide Listened'}
+              containerWidth={buttonsDimensions.width}
+              value={!showRead}
+              onClick={() => {
+                setShowRead(!showRead);
+              }}
+            />
+            <BooleanOption
               title={'Scroll to Bottom'}
+              containerWidth={buttonsDimensions.width}
               onClick={() => {
                 window.scrollTo(0, document.body.scrollHeight);
               }}
             />
-
+            <BooleanOption
+              title={'Scroll to Top'}
+              containerWidth={buttonsDimensions.width}
+              onClick={() => {
+                window.scrollTo(0, 0);
+              }}
+            />
+            <BooleanOption
+              title={'Autoplay'}
+              containerWidth={buttonsDimensions.width}
+              value={autoplay}
+              onClick={() => {
+                setAutoplay(!autoplay);
+              }}
+            />
+            <BooleanOption
+              title={'Skip call'}
+              containerWidth={buttonsDimensions.width}
+              onClick={() => {
+                playNext();
+              }}
+            />
             <BooleanOption
               title={'Delete Listened'}
+              containerWidth={buttonsDimensions.width}
               warning={true}
               onClick={async () => {
                 if (!window.confirm(`Are you sure you want to delete all listened audio${showOnlyFreq ? ' on this freq?' : "?"}`)) {
@@ -213,23 +260,9 @@ function App() {
                 getData();
               }}
             />
-          </div>
-          <div>
-            <BooleanOption
-              title={'Hide Listened'}
-              value={!showRead}
-              onClick={() => {
-                setShowRead(!showRead);
-              }}
-            />
-            <BooleanOption
-              title={'Scroll to Top'}
-              onClick={() => {
-                window.scrollTo(0, 0);
-              }}
-            />
             <BooleanOption
               title={'Mark Read'}
+              containerWidth={buttonsDimensions.width}
               warning={true}
               onClick={async () => {
                 if (!window.confirm(`Are you sure you want to mark ${showOnlyFreq ? "this frequency" : "all calls"} as read?`)) {
@@ -254,25 +287,9 @@ function App() {
             />
           </div>
           <div>
-            <BooleanOption
-              title={'Autoplay'}
-              value={autoplay}
-              onClick={() => {
-                setAutoplay(!autoplay);
-              }}
-            />
-            <BooleanOption
-              title={'Skip call'}
-              onClick={() => {
-                playNext();
-              }}
-            />
-          </div>
-          <div>
-
             <Select
               style={styles.select}
-              value={selectOptions.find(option=>option.value === showOnlyFreq)}
+              value={selectOptions.find(option => option.value === showOnlyFreq)}
               placeholder={"Select a frequency"}
               options={selectOptions}
               styles={customStyles}

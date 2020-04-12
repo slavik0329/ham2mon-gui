@@ -1,16 +1,26 @@
 import React from "react";
 
-export function BooleanOption({title, value, onClick, warning = false, type = 'normal'}) {
+export function BooleanOption({
+                                title,
+                                value,
+                                onClick,
+                                warning = false,
+                                type = 'normal',
+                                containerWidth
+                              }
+) {
+  console.log(containerWidth)
   const styles = {
     container: {
-      padding: type === 'small'?3:6,
+      padding: type === 'small' ? 3 : 6,
       display: "inline-block",
+      boxSizing: "border-box",
       cursor: "pointer",
       marginBottom: 4,
-      marginRight: 8,
-      width: type === 'small' ? 60 : 120,
+      marginRight: type === 'small' ? 8 : 0,
+      width: type === 'small' ? 60 : (containerWidth / 2) - 4,
       borderRadius: 4,
-      textAlign: type === 'small'? 'center' : 'left'
+      textAlign: type === 'small' ? 'center' : 'left'
     }
   };
 

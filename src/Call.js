@@ -91,7 +91,12 @@ function Call({
     >
       <div>
         <div style={styles.date}>
-          {dayjs(time * 1000).format('h:mm:ss A M/D/YYYY')}
+          <div>
+            {dayjs(time * 1000).format('M/D/YYYY')}
+          </div>
+          <div>
+            {dayjs(time * 1000).format('h:mm:ss A')}
+          </div>
         </div>
 
         <div
