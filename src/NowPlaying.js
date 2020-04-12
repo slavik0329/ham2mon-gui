@@ -105,7 +105,7 @@ export function NowPlaying({call, freqData}) {
       {call ? <div style={styles.rightBlock}>
         <div style={styles.date}>
           <div>{callInfo.time ? dayjs(callInfo.time * 1000).format('M-D-YYYY') : null}</div>
-          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format(tickOn ? 'hh:mm:ss' : 'hh mm ss') : null}</div>
+          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format(tickOn ? 'HH:mm:ss' : 'HH mm ss') : null}</div>
         </div>
       </div> : null}
     </div>
