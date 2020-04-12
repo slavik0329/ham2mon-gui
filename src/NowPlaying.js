@@ -7,32 +7,39 @@ export function NowPlaying({call, freqData}) {
 
   const styles = {
     container: {
-      color: '#284b34',
+      color: 'rgb(198, 225, 209)',
+      backgroundColor: 'rgb(40, 75, 52)',
+      borderRadius: 16,
       display: "flex",
+      padding: "6px 0 6px 0px",
       justifyContent: "center",
-      paddingTop: windowSize.width >= 600 ? "0" : 10,
+      marginTop: windowSize.width >= 600 ? "0" : 10,
+      marginBottom: 10
     },
     freq: {
-      color: '#f79c51',
+      color: 'rgb(198, 225, 209)',
       fontFamily: "Segment7",
       fontSize: 30,
       marginBottom: 8
     },
     date: {
       fontSize: 12,
+      marginTop: 12,
       marginBottom: 10
     },
     name: {
       fontWeight: 'bold'
     },
     rightBlock: {
-      paddingLeft: 20
+      paddingLeft: 20,
+      marginLeft: 40
     },
     nowPlaying: {
       textAlign: "center",
       fontWeight: 600,
       fontSize: 12,
-      marginBottom: 8
+      marginBottom: 8,
+      marginTop: 10
     }
   };
 
@@ -49,7 +56,7 @@ export function NowPlaying({call, freqData}) {
   const freqItem = freqData.find(freqItem => freqItem.freq === callInfo.freq);
 
   return <div style={styles.container}>
-   <div>
+   <div style={styles.leftBlock}>
      <div style={styles.nowPlaying}>
        Now Playing
      </div>
