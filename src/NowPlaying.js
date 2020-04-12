@@ -27,7 +27,7 @@ export function NowPlaying({call, freqData}) {
       fontWeight: 'normal',
       fontStyle: 'italic',
       fontSize: 30,
-      textAlign: "center"
+      textAlign: "center",
     },
     date: {
       fontFamily: "Segment7",
@@ -52,12 +52,13 @@ export function NowPlaying({call, freqData}) {
       paddingLeft: 14,
       flexGrow: '1'
     },
-    frequency: {
+    nowPlaying: {
       textAlign: "center",
       fontWeight: 500,
       fontSize: 12,
       marginBottom: 8,
-      marginTop: 10
+      marginTop: 10,
+      opacity: 0.5
     }
   };
 
@@ -76,7 +77,7 @@ export function NowPlaying({call, freqData}) {
   return <div style={styles.container}>
     <div style={styles.innerBlock}>
       <div style={styles.leftBlock}>
-        <div style={styles.frequency}>
+        <div style={styles.nowPlaying}>
           {call?'Now Playing':''}
         </div>
 

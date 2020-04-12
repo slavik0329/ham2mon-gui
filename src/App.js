@@ -17,7 +17,6 @@ import {primary, primary25} from "./color";
 const serverUrl = 'http://192.168.1.167:3124/';
 
 function App() {
-
   const windowSize = useWindowSize();
 
   const styles = {
@@ -57,6 +56,7 @@ function App() {
       outline: 0,
     }
   };
+
   const [calls, setCalls] = useState([]);
   const [selected, setSelected] = useState(null);
 
@@ -84,7 +84,6 @@ function App() {
   let filteredFreqs = uniqueFreqs.filter(freq => !hiddenArr.includes(freq));
   if (showHidden) {
     filteredFreqs = uniqueFreqs.filter(freq => hiddenArr.includes(freq));
-
   }
 
   useEffect(() => {
@@ -93,7 +92,6 @@ function App() {
   const getData = async () => {
     const result = await axios.get(serverUrl);
     setCalls(result.data);
-
   };
 
   const frequencyListItems = filteredFreqs.map(freq => {
@@ -107,7 +105,7 @@ function App() {
     };
   });
 
-  useEffect(()=> {
+  useEffect(() => {
     if (!showOnlyFreq && frequencyListItems.length) {
       setShowOnlyFreq(frequencyListItems[0].freq);
     }
@@ -129,6 +127,7 @@ function App() {
   useEffect(() => {
     filteredCallRefs.current = new Array(filteredCalls.length);
   }, []);
+
   const playNext = (skipAmount = 1) => {
     const selectedCallIndex = filteredCalls.findIndex(call => call.file === selected);
 
@@ -159,6 +158,7 @@ function App() {
     }
 
   }
+
   useHotkeys('k,down', () => playNext(), {}, [selected, listenedArr, filteredCalls, filteredCallRefs]);
   useHotkeys('j,up', () => playNext(-1), {}, [selected, listenedArr, filteredCalls]);
   useHotkeys('space', (event) => pause(event), {}, [audioRef, playing]);
@@ -178,6 +178,7 @@ function App() {
       borderColor: "#EEE !important"
     })
   };
+
   return (
     <div>
       <div style={styles.optionsBlock}>

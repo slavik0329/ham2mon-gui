@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import produce from "immer"
 import {sec2time} from "./Utils";
 import {BooleanOption} from "./BooleanOption";
-import {primary, primary25, secondary} from "./color";
+import {primary, primary25, secondary, secondary25} from "./color";
 
 function Call({
                 data,
@@ -66,7 +66,7 @@ function Call({
       marginRight: 8,
     },
     name: {
-      fontWeight: 'bold',
+      fontWeight: '500',
       fontSize: 16,
       marginTop: 4
     }
@@ -75,7 +75,7 @@ function Call({
 
   let color = secondary;
   let bg = "#FFF";
-  let border = '2px solid #FFF';
+  let border = '1px solid #EEE';
 
   if (listened) {
     // bg = "#ffdfc1";
@@ -112,7 +112,7 @@ function Call({
         </div>
 
         <div
-          style={{...styles.freq, color: liked ? primary : "black"}}
+          style={{...styles.freq, color: secondary, opacity: liked?1:0.5}}
           onClick={(event) => {
             if (!liked) {
               onLike();
