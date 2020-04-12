@@ -49,7 +49,7 @@ function App() {
       flexWrap: "wrap"
     },
     records: {
-      paddingTop: optionsBlockDimensions.height ? optionsBlockDimensions.height + 10 : 0
+      paddingTop: optionsBlockDimensions.height ? optionsBlockDimensions.height : 0
     },
     audio: {
       width: "100%",

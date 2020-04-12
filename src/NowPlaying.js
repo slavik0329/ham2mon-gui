@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import dayjs from "dayjs";
-import {useWindowSize} from "./Utils";
+import {isChrome, useWindowSize} from "./Utils";
 import {secondary, secondary25} from "./color";
 
 export function NowPlaying({call, freqData}) {
   const windowSize = useWindowSize();
+
   const styles = {
     container: {
       color: secondary25,
@@ -15,7 +16,7 @@ export function NowPlaying({call, freqData}) {
       justifyContent: "center",
       marginTop: windowSize.width >= 600 ? "0" : 10,
       marginBottom: 10,
-      height: 104
+      height: 112
     },
     innerBlock: {
       display: "flex",
@@ -41,6 +42,7 @@ export function NowPlaying({call, freqData}) {
     },
     name: {
       fontWeight: '500',
+      fontStyle: 'italic',
       textAlign: "center"
     },
     rightBlock: {
@@ -62,18 +64,18 @@ export function NowPlaying({call, freqData}) {
       opacity: 0.5
     }
   };
-
   const [tickOn, setTickOn] = useState(true);
-  const tickRef = useState(true);
 
+  const tickRef = useState(true);
   function tick() {
     tickRef.current = !tickRef.current;
-    setTickOn(tickRef.current);
 
+    setTickOn(tickRef.current);
     setTimeout(tick, 1000);
+
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     tick();
   }, []);
 
@@ -82,11 +84,10 @@ export function NowPlaying({call, freqData}) {
     freq: <div style={{}}>NOT PLAYING</div>,
     time: 0
   };
-
   if (call) {
     callInfo = call;
-  }
 
+  }
   const freqItem = freqData.find(freqItem => freqItem.freq === callInfo.freq);
 
   return <div style={styles.container}>
@@ -103,14 +104,14 @@ export function NowPlaying({call, freqData}) {
       {call ? <div style={styles.rightBlock}>
         <div style={styles.date}>
           <div>{callInfo.time ? dayjs(callInfo.time * 1000).format('M-D-YYYY') : null}</div>
-          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format(tickOn?'hh:mm:ss':'hh mm ss') : null}</div>
+          <div>{callInfo.time ? dayjs(callInfo.time * 1000).format(tickOn ? 'hh:mm:ss' : 'hh mm ss') : null}</div>
         </div>
       </div> : null}
     </div>
     <div style={styles.name}>
-      <marquee scrollamount={4} behavior={'scroll'}>
+      {isChrome ? <marquee scrollamount={4} behavior={'scroll'}>
         {freqItem ? freqItem.name : ''}
-      </marquee>
+      </marquee> : <div>{freqItem ? freqItem.name : ''}</div>}
 
     </div>
   </div>;

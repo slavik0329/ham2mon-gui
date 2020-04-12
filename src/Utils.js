@@ -41,3 +41,5 @@ export function useWindowSize() {
 
   return windowSize;
 }
+
+export const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
