@@ -11,9 +11,9 @@ import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
 
-const serverUrl = 'http://localhost:3124/';
+// const serverUrl = 'http://localhost:3124/';
 
-// const serverUrl = 'http://192.168.1.167:3124/';
+const serverUrl = 'http://192.168.1.167:3124/';
 
 function App() {
   const windowSize = useWindowSize();
