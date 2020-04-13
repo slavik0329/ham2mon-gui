@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {secondary} from "./color";
 
-
 function useHover() {
   const [value, setValue] = useState(false);
 
@@ -47,10 +46,10 @@ export function BooleanOption({
       boxSizing: "border-box",
       cursor: "pointer",
       marginBottom: 4,
-      marginRight: type === 'small' ? 8 : 0,
+      marginRight: type === 'small' || type === 'settings' ? 8 : 0,
       width: type === 'small' ? 60 : (containerWidth / 2) - 4,
       borderRadius: 4,
-      border: isHovered?`1px solid ${secondary}`:'1px solid rgba(0,0,0,0)',
+      border: isHovered ? `1px solid ${secondary}` : '1px solid rgba(0,0,0,0)',
       textAlign: type === 'small' ? 'center' : 'left',
       boxShadow: "1px 1px 2px #999",
     }

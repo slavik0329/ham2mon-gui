@@ -43,3 +43,23 @@ export function useWindowSize() {
 }
 
 export const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+
+export const getLocalStorage = () => {
+  var a = {};
+  for (var i = 0; i < localStorage.length; i++) {
+    var k = localStorage.key(i);
+    var v = localStorage.getItem(k);
+    a[k] = v;
+  }
+  var s = JSON.stringify(a);
+  return s;
+};
+
+export const writeLocalStorage = data => {
+  var o = JSON.parse(data);
+  for (var property in o) {
+    if (o.hasOwnProperty(property)) {
+      localStorage.setItem(property, o[property]);
+    }
+  }
+};

@@ -206,6 +206,7 @@ function App() {
         visible={showSettings}
         dirSize={dirSize}
         freeSpace={freeSpace}
+        handleClose={() => setShowSettings(false)}
       />
       <div
         ref={optionsBlockRef}

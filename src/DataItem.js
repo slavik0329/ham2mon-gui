@@ -5,15 +5,19 @@ export function DataItem({title, value}) {
   const styles = {
     container: {
       width: 150,
-      textAlign: "center"
+      textAlign: "center",
+      border: `2px solid ${primary}`,
+      borderRadius: 6,
+      marginRight: 8,
+      color: primary,
+      padding: 6
     },
     title: {
       fontSize: 12,
-      color: primary4
+      fontWeight: 500
     },
     value: {
       fontSize: 18,
-      color: primary4
     }
   };
 
