@@ -51,7 +51,8 @@ function Call({
       fontSize: 30,
       cursor: 'pointer',
       display: 'inline-block',
-      textAlign: "right"
+      textAlign: "right",
+      width: 106
     },
     rightBlock: {
       paddingLeft: 30,
@@ -69,7 +70,7 @@ function Call({
       fontWeight: '500',
       fontSize: 16,
       marginTop: 4
-    }
+    },
   };
   const {time, freq, file, size} = data;
 
@@ -101,7 +102,7 @@ function Call({
         onClick();
       }}
     >
-      <div>
+      <div style={styles.leftBlock}>
         <div style={styles.date}>
           <div>
             {dayjs(time * 1000).format('M-D-YYYY')}
