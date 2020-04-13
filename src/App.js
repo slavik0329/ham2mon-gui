@@ -37,11 +37,10 @@ function App() {
       boxSizing: 'border-box'
     },
     leftOptionsBlock: {
-      marginRight: 8,
+      marginRight: windowSize.width >= 600? 8: 0,
       width: windowSize.width >= 600 ? "40%" : '100%',
     },
     rightOptionsBlock: {
-      marginRight: windowSize.width >= 600 ? 24:0,
       boxSizing: "border-box",
       flexGrow: 1,
       backgroundColor: secondary25,
@@ -346,7 +345,7 @@ function App() {
             />
           </div>
         </div> : null}
-        {windowSize.width < 600?<div style={{display: 'flex', width: '100%'}}>
+        {windowSize.width < 600?<div style={{width: '100%'}}>
           <BooleanOption
             fullWidth={true}
             title={!mobileSettingsOpen?'Open Panel':'Close Panel'}
