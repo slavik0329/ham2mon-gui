@@ -2,17 +2,18 @@ const fs = require('fs');
 const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const cors = require('cors')
+const path = require('path')
 const sanitize = require("sanitize-filename");
 
 const express = require('express');
 const app = express();
-const port = 3124;
+const port = 8080;
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/', async (req, res) => {
+app.get('/data', async (req, res) => {
   const fileData = await getFileData();
 
   res.json(fileData);
@@ -48,6 +49,7 @@ app.post('/delete', async (req, res) => {
 });
 
 app.use('/static', express.static(wavDir));
+app.use('/', express.static(path.join(__dirname, '../build')));
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
 

@@ -13,9 +13,9 @@ import useDimensions from 'react-use-dimensions';
 import {primary, primary2, secondary25} from "./color";
 import ReactList from 'react-list';
 
-// const serverUrl = 'http://localhost:3124/';
+const serverUrl = 'http://localhost:8080/';
 
-const serverUrl = 'http://192.168.1.167:3124/';
+// const serverUrl = 'http://192.168.1.167:3124/';
 
 function App() {
   const windowSize = useWindowSize();
@@ -53,7 +53,7 @@ function App() {
       flexWrap: "wrap"
     },
     records: {
-      paddingTop: optionsBlockDimensions.height ? optionsBlockDimensions.height : 0
+      paddingTop: optionsBlockDimensions.height ? optionsBlockDimensions.height + 2 : 0
     },
     audio: {
       width: "100%",
@@ -101,7 +101,7 @@ function App() {
     getData();
   }, []);
   const getData = async () => {
-    const result = await axios.get(serverUrl);
+    const result = await axios.get(serverUrl + 'data');
     setCalls(result.data);
   };
 

@@ -20,7 +20,7 @@
     "react-use-dimensions": "^1.2.1"
   },
   "scripts": {
-    "prod": "((cd server && node server.js) & (cd build && http-server .))",
+    "prod": "cd server && node server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
