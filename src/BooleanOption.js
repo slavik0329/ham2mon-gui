@@ -34,10 +34,17 @@ export function BooleanOption({
                                 onClick,
                                 warning = false,
                                 type = 'normal',
-                                containerWidth
+                                containerWidth,
+                                fullWidth,
                               }
 ) {
   const [hoverRef, isHovered] = useHover();
+
+  let width = type === 'small' ? 60 : (containerWidth / 2) - 4;
+
+  if (fullWidth) {
+    width = "100%";
+  }
 
   const styles = {
     container: {
@@ -46,8 +53,8 @@ export function BooleanOption({
       boxSizing: "border-box",
       cursor: "pointer",
       marginBottom: 4,
-      marginRight: type === 'small' || type === 'settings' ? 8 : 0,
-      width: type === 'small' ? 60 : (containerWidth / 2) - 4,
+      marginRight: (type === 'small' || type === 'settings') && !fullWidth ? 8 : 0,
+      width: width,
       borderRadius: 4,
       border: isHovered ? `1px solid ${secondary}` : '1px solid rgba(0,0,0,0)',
       textAlign: type === 'small' ? 'center' : 'left',

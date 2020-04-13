@@ -15,7 +15,6 @@ import ReactList from 'react-list';
 import {Settings} from "./Settings";
 
 // const serverUrl = 'http://localhost:8080/';
-
 const serverUrl = 'http://192.168.1.167:8080/';
 
 function App() {
@@ -34,14 +33,16 @@ function App() {
       width: "100%",
       borderBottom: "1px solid #eee",
       zIndex: 1000,
-      boxShadow: '1px 1px 2px #adadad'
+      boxShadow: '1px 1px 2px #adadad',
+      boxSizing: 'border-box'
     },
     leftOptionsBlock: {
       marginRight: 8,
       width: windowSize.width >= 600 ? "40%" : '100%',
     },
     rightOptionsBlock: {
-      marginRight: 24,
+      marginRight: windowSize.width >= 600 ? 24:0,
+      boxSizing: "border-box",
       flexGrow: 1,
       backgroundColor: secondary25,
       padding: 10,
@@ -76,6 +77,7 @@ function App() {
   const [dirSize, setDirSize] = useState(null);
   const [freeSpace, setFreeSpace] = useState(null);
 
+  const [mobileSettingsOpen, setMobileSettingsOpen] = useLocalStorage('mobileSettingsOpen', false);
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
   const [likedArr, setLikedArr] = useLocalStorage('likedArr', []);
   const [hiddenArr, setHiddenArr] = useLocalStorage('hiddenArr', []);
@@ -212,7 +214,7 @@ function App() {
         ref={optionsBlockRef}
         style={styles.optionsBlock}
       >
-        <div style={styles.leftOptionsBlock}>
+        {windowSize.width >= 600 || mobileSettingsOpen ? <div style={styles.leftOptionsBlock}>
           <div
             ref={buttonsRef}
             style={styles.buttons}
@@ -343,7 +345,14 @@ function App() {
               }}
             />
           </div>
-        </div>
+        </div> : null}
+        {windowSize.width < 600?<div style={{display: 'flex', width: '100%'}}>
+          <BooleanOption
+            fullWidth={true}
+            title={!mobileSettingsOpen?'Open Panel':'Close Panel'}
+            onClick={()=>setMobileSettingsOpen(!mobileSettingsOpen)}
+          />
+        </div>:null}
         <div style={styles.rightOptionsBlock}>
           <NowPlaying call={selectedCall} freqData={freqData}/>
           <audio
