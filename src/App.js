@@ -14,9 +14,9 @@ import {primary, primary2, secondary25} from "./color";
 import ReactList from 'react-list';
 import {Settings} from "./Settings";
 
-const serverUrl = 'http://localhost:8080/';
+// const serverUrl = 'http://localhost:8080/';
 
-// const serverUrl = 'http://192.168.1.167:8080/';
+const serverUrl = 'http://192.168.1.167:8080/';
 
 function App() {
   const windowSize = useWindowSize();
