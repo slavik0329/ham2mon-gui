@@ -12,10 +12,11 @@ import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
 import {primary, primary2, secondary25} from "./color";
 import ReactList from 'react-list';
+import {Settings} from "./Settings";
 
-// const serverUrl = 'http://localhost:8080/';
+const serverUrl = 'http://localhost:8080/';
 
-const serverUrl = 'http://192.168.1.167:8080/';
+// const serverUrl = 'http://192.168.1.167:8080/';
 
 function App() {
   const windowSize = useWindowSize();
@@ -72,6 +73,8 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [dirSize, setDirSize] = useState(null);
+  const [freeSpace, setFreeSpace] = useState(null);
 
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
   const [likedArr, setLikedArr] = useLocalStorage('likedArr', []);
@@ -103,7 +106,11 @@ function App() {
 
   const getData = async () => {
     const result = await axios.get(serverUrl + 'data');
-    setCalls(result.data.files);
+    const {files, dirSize, freeSpace} = result.data;
+
+    setDirSize(dirSize);
+    setFreeSpace(freeSpace);
+    setCalls(files);
   };
 
   const frequencyListItems = filteredFreqs.map(freq => {
@@ -197,6 +204,8 @@ function App() {
     <div>
       <Settings
         visible={showSettings}
+        dirSize={dirSize}
+        freeSpace={freeSpace}
       />
       <div
         ref={optionsBlockRef}

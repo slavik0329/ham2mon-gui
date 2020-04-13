@@ -1,25 +1,31 @@
 const fs = require('fs');
 const util = require('util');
 const readdir = util.promisify(fs.readdir);
-const cors = require('cors')
-const path = require('path')
+const cors = require('cors');
+const path = require('path');
 const sanitize = require("sanitize-filename");
+const getSize = require('get-folder-size');
+const disk = require('diskusage');
 
 const express = require('express');
 const app = express();
 const port = 8080;
 
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-app.get('/data', async (req, res) => {
-  const fileData = await getFileData();
-
-  res.json({
-    files: fileData
-  });
-});
+function getSizePromise(dir) {
+  return new Promise((resolve, reject) => {
+    getSize(dir, (err, size) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(size);
+      }
+    });
+  })
+}
 
 let wavDir;
 
@@ -34,6 +40,18 @@ try {
   console.log("Error: You must have a configuration file in server path! [config.json]");
   process.exit();
 }
+
+app.get('/data', async (req, res) => {
+  const fileData = await getFileData();
+  const dirSize = await getSizePromise(wavDir);
+  const {available} = await disk.check(wavDir);
+
+  res.json({
+    files: fileData,
+    dirSize,
+    freeSpace: available
+  });
+});
 
 app.post('/delete', async (req, res) => {
   const {files} = req.body;
