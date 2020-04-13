@@ -69,19 +69,19 @@ function App() {
 
   const [calls, setCalls] = useState([]);
   const [selected, setSelected] = useState(null);
-
   const [playing, setPlaying] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
   const [likedArr, setLikedArr] = useLocalStorage('likedArr', []);
   const [hiddenArr, setHiddenArr] = useLocalStorage('hiddenArr', []);
   const [autoplay, setAutoplay] = useLocalStorage('autoplay', true);
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
-
   const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
-  const audioRef = useRef(null);
 
+  const audioRef = useRef(null);
   const filteredCallRefs = useRef([]);
 
   const [buttonsRef, buttonsDimensions] = useDimensions();
@@ -100,9 +100,10 @@ function App() {
   useEffect(() => {
     getData();
   }, []);
+
   const getData = async () => {
     const result = await axios.get(serverUrl + 'data');
-    setCalls(result.data);
+    setCalls(result.data.files);
   };
 
   const frequencyListItems = filteredFreqs.map(freq => {
@@ -157,7 +158,6 @@ function App() {
         nextCall.file
       ]);
     }
-
   };
 
   function pause(event) {
@@ -195,6 +195,9 @@ function App() {
 
   return (
     <div>
+      <Settings
+        visible={showSettings}
+      />
       <div
         ref={optionsBlockRef}
         style={styles.optionsBlock}
@@ -213,11 +216,10 @@ function App() {
               }}
             />
             <BooleanOption
-              title={'Show Hidden'}
+              title={'Settings'}
               containerWidth={buttonsDimensions.width}
-              value={showHidden}
               onClick={() => {
-                setShowHidden(!showHidden);
+                setShowSettings(true);
               }}
             />
             <BooleanOption
@@ -229,10 +231,11 @@ function App() {
               }}
             />
             <BooleanOption
-              title={'Skip call'}
+              title={'Show Hidden'}
               containerWidth={buttonsDimensions.width}
+              value={showHidden}
               onClick={() => {
-                playNext();
+                setShowHidden(!showHidden);
               }}
             />
             <BooleanOption
