@@ -15,7 +15,7 @@ import ReactList from 'react-list';
 
 // const serverUrl = 'http://localhost:8080/';
 
-const serverUrl = 'http://192.168.1.167:3124/';
+const serverUrl = 'http://192.168.1.167:8080/';
 
 function App() {
   const windowSize = useWindowSize();
