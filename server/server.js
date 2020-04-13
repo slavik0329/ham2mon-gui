@@ -16,7 +16,9 @@ app.use(express.json());
 app.get('/data', async (req, res) => {
   const fileData = await getFileData();
 
-  res.json(fileData);
+  res.json({
+    files: fileData
+  });
 });
 
 let wavDir;
