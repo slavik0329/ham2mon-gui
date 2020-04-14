@@ -14,9 +14,6 @@ import {primary, primary2, secondary25} from "./color";
 import ReactList from 'react-list';
 import {Settings} from "./Settings";
 
-// const serverUrl = 'http://localhost:8080/';
-const serverUrl = 'http://192.168.1.167:8080/';
-
 function App() {
   const windowSize = useWindowSize();
   const [optionsBlockRef, optionsBlockDimensions] = useDimensions();
@@ -37,7 +34,7 @@ function App() {
       boxSizing: 'border-box'
     },
     leftOptionsBlock: {
-      marginRight: windowSize.width >= 600? 8: 0,
+      marginRight: windowSize.width >= 600 ? 8 : 0,
       width: windowSize.width >= 600 ? "40%" : '100%',
     },
     rightOptionsBlock: {
@@ -84,11 +81,14 @@ function App() {
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
   const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
+  const [serverIP, setServerIP] = useLocalStorage('setServerIP', '127.0.0.1');
 
   const audioRef = useRef(null);
   const filteredCallRefs = useRef([]);
 
   const [buttonsRef, buttonsDimensions] = useDimensions();
+
+  const serverUrl = `http://${serverIP}:8080/`;
 
   const selectedCall = calls.find(call => call.file === selected);
   const allFreqs = calls.map(call => call.freq);
@@ -176,7 +176,6 @@ function App() {
     } else {
       audioRef.current.play();
     }
-
   }
 
   useHotkeys('k,down', () => playNext(), {}, [selected, listenedArr, filteredCalls, filteredCallRefs]);
@@ -185,10 +184,17 @@ function App() {
   useHotkeys('shift+k,shift+down', () => window.scrollTo(0, document.body.scrollHeight));
 
   useHotkeys('shift+j,shift+up', () => window.scrollTo(0, 0));
+  useHotkeys('s', () => audioRef.current.currentTime += 5);
+  useHotkeys('a', () => audioRef.current.currentTime -= 5);
 
   const selectOptions = frequencyListItems.map(freqItem => ({
     value: freqItem.freq,
-    label: `${freqItem.freq} ${freqItem.name ? freqItem.name : ''} (${freqItem.unlistenedCount})`
+    label: <div style={{
+      fontWeight: freqItem.unlistenedCount ? "500" : "auto"
+    }}
+    >
+      {`${freqItem.freq} ${freqItem.name ? freqItem.name : ''} (${freqItem.unlistenedCount})`}
+    </div>
   }));
 
   const customStyles = {
@@ -345,13 +351,13 @@ function App() {
             />
           </div>
         </div> : null}
-        {windowSize.width < 600?<div style={{width: '100%'}}>
+        {windowSize.width < 600 ? <div style={{width: '100%'}}>
           <BooleanOption
             fullWidth={true}
-            title={!mobileSettingsOpen?'Open Panel':'Close Panel'}
-            onClick={()=>setMobileSettingsOpen(!mobileSettingsOpen)}
+            title={!mobileSettingsOpen ? 'Open Panel' : 'Close Panel'}
+            onClick={() => setMobileSettingsOpen(!mobileSettingsOpen)}
           />
-        </div>:null}
+        </div> : null}
         <div style={styles.rightOptionsBlock}>
           <NowPlaying call={selectedCall} freqData={freqData}/>
           <audio

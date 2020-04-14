@@ -3,7 +3,9 @@ import {primary} from "./color";
 import {DataItem} from "./DataItem";
 import {FaTimes} from "react-icons/fa";
 import {BooleanOption} from "./BooleanOption";
-import {getLocalStorage, writeLocalStorage} from "./Utils";
+import {download, getLocalStorage, writeLocalStorage} from "./Utils";
+import {useLocalStorage} from "./useLocalStorage";
+import {Button} from "./Button";
 
 /**
  * @return {null}
@@ -26,7 +28,8 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
       zIndex: 2000,
       boxSizing: "border-box",
       border: "1px solid #EEE",
-      borderRadius: '0 0 6px 6px'
+      borderRadius: '0 0 6px 6px',
+      color: primary
     },
     titleBar: {
       position: "relative",
@@ -48,26 +51,16 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
     controls: {
       marginTop: 14
     },
-   restoreBlock: {
+    restoreBlock: {
       marginTop: 10
-   }
-  };
-
-  const download = (filename, text) => {
-    var pom = document.createElement('a');
-    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    pom.setAttribute('download', filename);
-
-    if (document.createEvent) {
-      var event = document.createEvent('MouseEvents');
-      event.initEvent('click', true, true);
-      pom.dispatchEvent(event);
-    } else {
-      pom.click();
+    },
+    serverIP: {
+      marginTop: 10,
+      color: primary
     }
   };
 
-
+  const [serverIP, setServerIP] = useLocalStorage('setServerIP', '127.0.0.1');
 
   return visible ? (
     <div
@@ -92,6 +85,29 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
           <DataItem
             title="Disk space available"
             value={`${(freeSpace / 1024 / 1024).toFixed(2)}MB`}
+          />
+        </div>
+
+        <div style={styles.serverIP}>
+          <span>Server IP:</span>
+          <input
+            style={{
+              padding: 8,
+              fontSize: 14,
+              marginLeft: 8,
+              border: `1px solid ${primary}`,
+              color: primary
+              // border: `1px 0 1px 1px solid ${primary}`
+            }}
+            type={'text'}
+            value={serverIP}
+            onChange={(event)=> {
+              setServerIP(event.target.value)
+            }}
+          />
+          <Button
+            title={'Set'}
+            onClick={()=>window.location.reload()}
           />
         </div>
 
