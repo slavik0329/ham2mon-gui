@@ -28,7 +28,8 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
       boxSizing: "border-box",
       border: "1px solid #EEE",
       borderRadius: '0 0 6px 6px',
-      color: primary4
+      color: primary4,
+      boxShadow: '0px 3px 10px #585858'
     },
     titleBar: {
       position: "relative",

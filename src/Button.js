@@ -13,7 +13,9 @@ export function Button({title, onClick, type, secondary}) {
       cursor: "pointer",
       borderRadius: type === 'input' ? "0 4px 4px 0" : 4,
       position: "relative",
-      top: 1
+      top: 1,
+      boxShadow: '0px 2px 3px #eabe95'
+
     }}
   >
     {title}

@@ -32,7 +32,7 @@ export function BooleanOption({
       borderRadius: 4,
       border: isHovered ? `1px solid ${secondary}` : '1px solid rgba(0,0,0,0)',
       textAlign: type === 'small' ? 'center' : 'left',
-      boxShadow: "1px 1px 2px #999",
+      boxShadow: !warning?"rgb(120, 158, 136) 1px 1px 2px":'rgb(160, 122, 90) 1px 1px 2px',
     }
   };
 

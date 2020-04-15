@@ -12,6 +12,7 @@ export function DataItem({title, value, type}) {
       marginRight: 8,
       padding: 6,
       color: primary4,
+      boxShadow: '1px 2px 3px #eabe95'
     },
     title: {
       fontSize: 14,
