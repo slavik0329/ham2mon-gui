@@ -2,7 +2,6 @@ import React from "react";
 import {primary, primary2, primary4} from "./color";
 import {DataItem} from "./DataItem";
 import {FaTimes} from "react-icons/fa";
-import {BooleanOption} from "./BooleanOption";
 import {download, getLocalStorage, writeLocalStorage} from "./Utils";
 import {useLocalStorage} from "./useLocalStorage";
 import {Button} from "./Button";

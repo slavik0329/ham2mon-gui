@@ -10,7 +10,7 @@ import {useWindowSize} from "./Utils";
 import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
-import {primary, primary2, secondary25} from "./color";
+import {primary, primary2, primary4, secondary25} from "./color";
 import ReactList from 'react-list';
 import {Settings} from "./Settings";
 
@@ -62,6 +62,13 @@ function App() {
     },
     select: {
       outline: 0,
+    },
+    loadError: {
+      backgroundColor: primary2,
+      color: primary4,
+      padding: 10,
+      margin: 10,
+      borderRadius: 4
     }
   };
 
@@ -72,6 +79,7 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [dirSize, setDirSize] = useState(null);
   const [freeSpace, setFreeSpace] = useState(null);
+  const [loadError, setLoadError] = useState(false);
 
   const [mobileSettingsOpen, setMobileSettingsOpen] = useLocalStorage('mobileSettingsOpen', false);
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
@@ -81,7 +89,7 @@ function App() {
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
   const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
-  const [serverIP, setServerIP] = useLocalStorage('setServerIP', '127.0.0.1');
+  const [serverIP, setServerIP] = useLocalStorage('setServerIP', window.location.hostname);
 
   const audioRef = useRef(null);
   const filteredCallRefs = useRef([]);
@@ -106,12 +114,17 @@ function App() {
   }, []);
 
   const getData = async () => {
-    const result = await axios.get(serverUrl + 'data');
-    const {files, dirSize, freeSpace} = result.data;
+    try {
+      const result = await axios.get(serverUrl + 'data');
+      const {files, dirSize, freeSpace} = result.data;
 
-    setDirSize(dirSize);
-    setFreeSpace(freeSpace);
-    setCalls(files);
+      setDirSize(dirSize);
+      setFreeSpace(freeSpace);
+      setCalls(files);
+    } catch (e) {
+      setLoadError(true);
+    }
+
   };
 
   const frequencyListItems = filteredFreqs.map(freq => {
@@ -385,6 +398,9 @@ function App() {
       </div>
 
       <div style={styles.records}>
+        {loadError?<div style={styles.loadError}>
+          There was an issue getting the data. Please ensure the settings are correct.
+        </div>:null}
         <ReactList
           itemRenderer={(index, key) => {
             const call = filteredCalls[index];

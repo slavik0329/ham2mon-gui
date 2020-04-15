@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import dayjs from "dayjs";
 
 import {FaRegClock, FaRegHdd} from 'react-icons/fa';
 import produce from "immer"
 import {sec2time} from "./Utils";
 import {BooleanOption} from "./BooleanOption";
-import {primary, primary2, primary4, secondary, secondary25} from "./color";
+import {primary2, primary4} from "./color";
 
 function Call({
                 data,
@@ -85,7 +85,6 @@ function Call({
   let border = '1px solid #EEE';
 
   if (listened) {
-    // bg = "#ffdfc1";
     bg = primary2;
   }
   if (selected) {
@@ -209,20 +208,7 @@ function Call({
               }
             }}
           />
-
-          {/*<BooleanOption*/}
-          {/*  title={'Mark Read'}*/}
-          {/*  type={'small'}*/}
-          {/*  onClick={async (event) => {*/}
-          {/*    event.stopPropagation();*/}
-
-          {/*    handleMarkRead(freq);*/}
-          {/*  }}*/}
-          {/*/>*/}
         </div>
-      </div>
-      <div>
-        {/*audio used to be here*/}
       </div>
     </div>
   );
