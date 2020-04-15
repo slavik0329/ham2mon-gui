@@ -25,7 +25,7 @@ function App() {
       flexWrap: "wrap",
       justifyContent: "space-around",
       top: 0,
-      padding: 10,
+      padding: 6,
       backgroundColor: "#FFF",
       width: "100%",
       borderBottom: "1px solid #eee",

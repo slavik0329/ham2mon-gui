@@ -6,6 +6,8 @@ import produce from "immer"
 import {sec2time} from "./Utils";
 import {BooleanOption} from "./BooleanOption";
 import {primary2, primary4} from "./color";
+import {SmallDataBlock} from "./SmallDataBlock";
+import {TextButton} from "./TextButton";
 
 function Call({
                 data,
@@ -74,8 +76,8 @@ function Call({
     },
     infoBlock: {
       fontSize: 13,
-      marginTop: 4,
-      marginBottom: 5
+      marginTop: 10,
+      marginBottom: 8
     }
   };
   const {time, freq, file, size} = data;
@@ -137,37 +139,19 @@ function Call({
           {freqItem ? freqItem.name : ''}
         </div>
         <div style={styles.infoBlock}>
-          <FaRegClock
-            style={{
-              marginRight: 2,
-              width: 12,
-              height: 12,
-              marginTop: 2
-            }}
+          <SmallDataBlock
+            Icon={FaRegClock}
+            data={sec2time(size / 16000)}
           />
-          {sec2time(size / 16000)}
 
-          <FaRegHdd
-            style={{
-              marginLeft: 6,
-              width: 12,
-              height: 12,
-              marginTop: 2
-            }}
+          <SmallDataBlock
+            Icon={FaRegHdd}
+            data={`${size / 1000}kb`}
           />
-          <span
-            style={{
-              marginLeft: 2
-            }}
-          >
-            {size / 1000}kb
-          </span>
         </div>
         <div style={styles.controls}>
-          <BooleanOption
+          <TextButton
             title={hidden ? 'Unhide' : 'Hide'}
-            type={'small'}
-            warning={true}
             onClick={(event) => {
               event.stopPropagation();
               if (hidden) {
@@ -181,10 +165,8 @@ function Call({
             }}
           />
 
-          <BooleanOption
+          <TextButton
             title={'Rename'}
-            type={'small'}
-            warning={true}
             onClick={async (event) => {
               event.stopPropagation();
 
