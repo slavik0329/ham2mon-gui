@@ -2,11 +2,11 @@ GUI for ham2mon wav output
 
 ![Image description](https://github.com/slavik0329/ham2mon-gui/blob/master/images/ss.png?raw=true)
 
-###Requirements
+### Requirements
 Node.js
 Yarn (optional)
 
-###Installation
+### Installation
 
 ```
 git clone https://github.com/slavik0329/ham2mon-gui.git
@@ -17,14 +17,14 @@ yarn (or npm install)
 cd ..
 ```
 
-###Configuring
+### Configuring
 
 Copy the config.sample.json to config.json. Modify the wavDir property to the location of where the wav files are being stored.
 
 ```
 yarn build
 ```
-###Running
+### Running
 
 ```
 yarn run prod (or npm run prod)
