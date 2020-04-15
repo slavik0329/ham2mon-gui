@@ -69,7 +69,7 @@ function App() {
   const [selected, setSelected] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
-  const [showSettings, setShowSettings] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
   const [dirSize, setDirSize] = useState(null);
   const [freeSpace, setFreeSpace] = useState(null);
 
