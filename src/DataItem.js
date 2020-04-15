@@ -1,23 +1,30 @@
 import React from "react";
-import {primary, primary4} from "./color";
+import {primary, primary2, primary3, primary4} from "./color";
 
-export function DataItem({title, value}) {
+export function DataItem({title, value, type}) {
   const styles = {
     container: {
+      backgroundColor: "#FFF",
       width: 150,
       textAlign: "center",
-      border: `2px solid ${primary}`,
+      border: `1px solid ${primary}`,
       borderRadius: 6,
       marginRight: 8,
-      color: primary,
-      padding: 6
+      padding: 6,
+      color: primary4,
     },
     title: {
-      fontSize: 12,
-      fontWeight: 500
+      fontSize: 14,
+      // fontWeight: 500,
+      marginBottom: 2,
     },
     value: {
+      fontSize: 24,
+      fontWeight: 500,
+    },
+    type: {
       fontSize: 18,
+      marginLeft: 4
     }
   };
 
@@ -26,7 +33,7 @@ export function DataItem({title, value}) {
       style={styles.container}
     >
       <div style={styles.title}>{title}</div>
-      <div style={styles.value}>{value}</div>
+      <div style={styles.value}>{value}<span style={styles.type}>{type}</span></div>
     </div>
   );
 }

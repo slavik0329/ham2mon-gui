@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import dayjs from "dayjs";
 
+import {FaRegClock, FaRegHdd} from 'react-icons/fa';
 import produce from "immer"
 import {sec2time} from "./Utils";
 import {BooleanOption} from "./BooleanOption";
@@ -41,7 +42,7 @@ function Call({
       fontStyle: 'italic',
       fontSize: 15,
       marginBottom: 10,
-      marginTop:9,
+      marginTop: 9,
       textAlign: 'right'
     },
     freq: {
@@ -71,6 +72,11 @@ function Call({
       fontSize: 16,
       marginTop: 4
     },
+    infoBlock: {
+      fontSize: 13,
+      marginTop: 4,
+      marginBottom: 5
+    }
   };
   const {time, freq, file, size} = data;
 
@@ -113,7 +119,7 @@ function Call({
         </div>
 
         <div
-          style={{...styles.freq, color: liked?primary4:'#ccc',}}
+          style={{...styles.freq, color: liked ? primary4 : '#ccc',}}
           onClick={(event) => {
             if (!liked) {
               onLike();
@@ -131,11 +137,32 @@ function Call({
         <div style={styles.name}>
           {freqItem ? freqItem.name : ''}
         </div>
-        <div>
-          <b>Duration:</b> {sec2time(size / 16000)}
-        </div>
-        <div>
-          <b>Size:</b> {size / 1000}kb
+        <div style={styles.infoBlock}>
+          <FaRegClock
+            style={{
+              marginRight: 2,
+              width: 12,
+              height: 12,
+              marginTop: 2
+            }}
+          />
+          {sec2time(size / 16000)}
+
+          <FaRegHdd
+            style={{
+              marginLeft: 6,
+              width: 12,
+              height: 12,
+              marginTop: 2
+            }}
+          />
+          <span
+            style={{
+              marginLeft: 2
+            }}
+          >
+            {size / 1000}kb
+          </span>
         </div>
         <div style={styles.controls}>
           <BooleanOption

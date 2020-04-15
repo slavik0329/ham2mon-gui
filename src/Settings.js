@@ -1,5 +1,5 @@
 import React from "react";
-import {primary} from "./color";
+import {primary, primary2, primary4} from "./color";
 import {DataItem} from "./DataItem";
 import {FaTimes} from "react-icons/fa";
 import {BooleanOption} from "./BooleanOption";
@@ -22,14 +22,14 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
       height: '100%',
     },
     container: {
-      backgroundColor: "#FFF",
+      backgroundColor: primary2,
       padding: 20,
       width: "100%",
       zIndex: 2000,
       boxSizing: "border-box",
       border: "1px solid #EEE",
       borderRadius: '0 0 6px 6px',
-      color: primary
+      color: primary4
     },
     titleBar: {
       position: "relative",
@@ -40,7 +40,8 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
       borderRadius: '6px 6px 0 0'
     },
     dataItems: {
-      display: "flex"
+      display: "flex",
+      marginBottom: 20
     },
     closeButton: {
       position: "absolute",
@@ -57,6 +58,9 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
     serverIP: {
       marginTop: 10,
       color: primary
+    },
+    restoreText: {
+      marginBottom: 10
     }
   };
 
@@ -79,50 +83,55 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
         <div style={styles.dataItems}>
           <DataItem
             title="WAV directory size"
-            value={`${(dirSize / 1024 / 1024).toFixed(2)}MB`}
+            type={"MB"}
+            value={(dirSize / 1024 / 1024).toFixed(2)}
           />
 
           <DataItem
             title="Disk space available"
-            value={`${(freeSpace / 1024 / 1024).toFixed(2)}MB`}
+            type={"MB"}
+            value={(freeSpace / 1024 / 1024).toFixed(2)}
           />
         </div>
 
         <div style={styles.serverIP}>
-          <span>Server IP:</span>
+          <span style={{color: primary4}}>Server IP</span>
           <input
             style={{
               padding: 8,
               fontSize: 14,
               marginLeft: 8,
               border: `1px solid ${primary}`,
-              color: primary
-              // border: `1px 0 1px 1px solid ${primary}`
+              borderRadius: "4px 0 0 4px",
+              color: primary4
             }}
             type={'text'}
             value={serverIP}
-            onChange={(event)=> {
+            onChange={(event) => {
               setServerIP(event.target.value)
             }}
           />
           <Button
             title={'Set'}
-            onClick={()=>window.location.reload()}
+            type={"input"}
+            onClick={() => window.location.reload()}
           />
         </div>
 
         <div style={styles.controls}>
-          <BooleanOption
-            title={'Backup Data'}
-            type={'settings'}
-            onClick={() => {
-              const storage = getLocalStorage();
+          <div>
+            <Button
+              title={'Backup Data'}
+              secondary={true}
+              onClick={() => {
+                const storage = getLocalStorage();
 
-              download('Ham2Mon-Gui-Backup-' + new Date().toDateString() + ".bak", storage);
-            }}
-          />
+                download('Ham2Mon-Gui-Backup-' + new Date().toDateString() + ".bak", storage);
+              }}
+            />
+          </div>
           <div style={styles.restoreBlock}>
-            <div>Restore backup by uploading it below</div>
+            <div style={styles.restoreText}>Restore backup by uploading it below</div>
             <input
               type={'file'}
               onChange={(event) => {
