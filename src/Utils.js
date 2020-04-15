@@ -45,19 +45,18 @@ export function useWindowSize() {
 export const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
 export const getLocalStorage = () => {
-  var a = {};
-  for (var i = 0; i < localStorage.length; i++) {
-    var k = localStorage.key(i);
-    var v = localStorage.getItem(k);
+  const a = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    const v = localStorage.getItem(k);
     a[k] = v;
   }
-  var s = JSON.stringify(a);
-  return s;
+  return JSON.stringify(a);
 };
 
 export const writeLocalStorage = data => {
-  var o = JSON.parse(data);
-  for (var property in o) {
+  const o = JSON.parse(data);
+  for (const property in o) {
     if (o.hasOwnProperty(property)) {
       localStorage.setItem(property, o[property]);
     }
@@ -65,12 +64,12 @@ export const writeLocalStorage = data => {
 };
 
 export const download = (filename, text) => {
-  var pom = document.createElement('a');
+  const pom = document.createElement('a');
   pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
   pom.setAttribute('download', filename);
 
   if (document.createEvent) {
-    var event = document.createEvent('MouseEvents');
+    const event = document.createEvent('MouseEvents');
     event.initEvent('click', true, true);
     pom.dispatchEvent(event);
   } else {

@@ -93,14 +93,12 @@ async function getFileData() {
 
   console.log(fileData.length)
 
-  const filtered = fileData.filter(
+  return fileData.filter(
     file => {
       const beforeTime = parseInt((Date.now() / 1000) - (60 * 60 * 3));
       return file.size > 60000
       // && parseInt(file.time) > beforeTime)
     }
   );
-
-  return filtered;
 }
 
