@@ -167,11 +167,13 @@ function App() {
 
     const nextCall = filteredCalls[selectedCallIndex + skipAmount];
 
-    try {
-      filteredCallRefs.current[selectedCallIndex + skipAmount].scrollIntoView({block: 'center'});
-    } catch (e) {
+    // Doesn't scroll now because of new scoll component
+    // try {
+    //   filteredCallRefs.current[selectedCallIndex + skipAmount].scrollIntoView({block: 'center'});
+    // } catch (e) {
+    //
+    // }
 
-    }
     if (nextCall) {
       setSelected(nextCall.file);
       setListenedArr([

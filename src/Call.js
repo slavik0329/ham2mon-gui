@@ -76,8 +76,8 @@ function Call({
     },
     infoBlock: {
       fontSize: 13,
-      marginTop: 10,
-      marginBottom: 8
+      marginTop: 4,
+      marginBottom: 14
     }
   };
   const {time, freq, file, size} = data;
@@ -136,7 +136,7 @@ function Call({
       </div>
       <div style={styles.rightBlock}>
         <div style={styles.name}>
-          {freqItem ? freqItem.name : ''}
+          {freqItem ? freqItem.name : 'NO NAME'}
         </div>
         <div style={styles.infoBlock}>
           <SmallDataBlock

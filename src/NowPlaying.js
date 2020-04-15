@@ -68,6 +68,7 @@ export function NowPlaying({call, freqData}) {
   const [tickOn, setTickOn] = useState(true);
 
   const tickRef = useState(true);
+
   function tick() {
     tickRef.current = !tickRef.current;
 
@@ -111,7 +112,7 @@ export function NowPlaying({call, freqData}) {
     </div>
     <div style={styles.name}>
       {isChrome ? <marquee scrollamount={4} behavior={'scroll'}>
-        {freqItem ? freqItem.name : ''}
+        {freqItem ? freqItem.name : call ? 'NO NAME' : ''}
       </marquee> : <div>{freqItem ? freqItem.name : ''}</div>}
 
     </div>
