@@ -115,7 +115,10 @@ function App() {
 
   const getData = async () => {
     try {
-      const result = await axios.get(serverUrl + 'data');
+      const result = await axios.post(serverUrl + 'data', {
+        fromTime: Math.floor(Date.now()/1000) - (60 * 60 * 24)
+      });
+
       const {files, dirSize, freeSpace} = result.data;
 
       setDirSize(dirSize);

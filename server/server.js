@@ -41,7 +41,7 @@ try {
   process.exit();
 }
 
-app.get('/data', async (req, res) => {
+app.post('/data', async (req, res) => {
   let fileData = await getFileData();
   const dirSize = await getSizePromise(wavDir);
   const {available} = await disk.check(wavDir);
