@@ -49,7 +49,7 @@ app.post('/data', async (req, res) => {
   const {fromTime} = req.body;
 
   if (fromTime) {
-    fileData = fileData.map(file=>file.time >= fromTime);
+    fileData = fileData.filter(file=>file.time >= fromTime);
   }
 
   res.json({
