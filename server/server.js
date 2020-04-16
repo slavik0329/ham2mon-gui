@@ -42,9 +42,15 @@ try {
 }
 
 app.get('/data', async (req, res) => {
-  const fileData = await getFileData();
+  let fileData = await getFileData();
   const dirSize = await getSizePromise(wavDir);
   const {available} = await disk.check(wavDir);
+
+  const {fromTime} = req.body;
+
+  if (fromTime) {
+    fileData = fileData.map(file=>file.time >= fromTime);
+  }
 
   res.json({
     files: fileData,

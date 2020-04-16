@@ -4,8 +4,7 @@ import dayjs from "dayjs";
 import {FaRegClock, FaRegHdd} from 'react-icons/fa';
 import produce from "immer"
 import {sec2time} from "./Utils";
-import {BooleanOption} from "./BooleanOption";
-import {primary2, primary4} from "./color";
+import {primary2, primary4, secondary2, secondary25} from "./color";
 import {SmallDataBlock} from "./SmallDataBlock";
 import {TextButton} from "./TextButton";
 
@@ -86,12 +85,19 @@ function Call({
   let bg = "#FFF";
   let border = '1px solid #EEE';
 
+  if (size / 16000 > 10) {
+    bg = secondary2;
+  }
+
   if (listened) {
     bg = primary2;
   }
+
   if (selected) {
     border = "2px solid #f79c51";
   }
+
+
 
   const freqItem = freqData.find(freqItem => freqItem.freq === freq);
   const freqItemIndex = freqData.findIndex(freqItem => freqItem.freq === freq);
