@@ -113,7 +113,7 @@ function App() {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [showSince]);
 
   const getData = async () => {
     try {
@@ -123,11 +123,8 @@ function App() {
 
       const {files, dirSize, freeSpace} = result.data;
 
-      const statFiles = files.filter(file => file.time >= Math.floor(Date.now() / 1000) - (60 * 30));
+      // const statFiles = files.filter(file => file.time >= Math.floor(Date.now() / 1000) - (60 * 60 * 24));
 
-      const orderedStats = getFreqStats(statFiles);
-
-      setFreqStats(orderedStats);
       setDirSize(dirSize);
       setFreeSpace(freeSpace);
       setCalls(files);
@@ -136,6 +133,12 @@ function App() {
     }
 
   };
+
+  useEffect(()=> {
+    const orderedStats = getFreqStats(calls);
+
+    setFreqStats(orderedStats);
+  }, [calls, showSince])
 
   const frequencyListItems = filteredFreqs.map(freq => {
     const freqItem = freqData.find(freqItem => freqItem.freq === freq);

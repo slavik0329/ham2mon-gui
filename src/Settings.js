@@ -91,7 +91,7 @@ export function Settings({visible, dirSize, freeSpace, handleClose, freqStats, s
   const timeSelect = [
     {
       label: <div style={styles.timeSelectItem}>30 min</div>,
-      value: 60 * 60
+      value: 60 * 30
     },
     {
       label: <div style={styles.timeSelectItem}>1 hour</div>,
