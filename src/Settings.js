@@ -5,11 +5,13 @@ import {FaTimes} from "react-icons/fa";
 import {download, getLocalStorage, writeLocalStorage} from "./Utils";
 import {useLocalStorage} from "./useLocalStorage";
 import {Button} from "./Button";
+import {Bar} from 'react-chartjs-2';
+import Select from 'react-select'
 
 /**
  * @return {null}
  */
-export function Settings({visible, dirSize, freeSpace, handleClose}) {
+export function Settings({visible, dirSize, freeSpace, handleClose, freqStats, showSince, setShowSince}) {
   const styles = {
     outerContainer: {
       position: "fixed",
@@ -59,12 +61,51 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
       marginTop: 10,
       color: primary
     },
+    showCallsSince: {
+      marginTop: 10,
+      color: primary,
+      display: "flex",
+      alignItems: "baseline"
+    },
     restoreText: {
       marginBottom: 10
+    },
+    timeSelectItem: {
+      color: primary4
     }
   };
 
   const [serverIP, setServerIP] = useLocalStorage('setServerIP', '127.0.0.1');
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      boxShadow: "none",
+      color: primary,
+      border: `1px solid ${primary}`,
+      width: 200,
+      marginRight: 10
+    })
+  };
+
+  const timeSelect = [
+    {
+      label: <div style={styles.timeSelectItem}>30 min</div>,
+      value: 60 * 60
+    },
+    {
+      label: <div style={styles.timeSelectItem}>1 hour</div>,
+      value: 60 * 60
+    },
+    {
+      label: <div style={styles.timeSelectItem}>2 hours</div>,
+      value: 60 * 60 * 2
+    },
+    {
+      label: <div style={styles.timeSelectItem}>1 day</div>,
+      value: 60 * 60 * 24
+    }
+  ];
 
   return visible ? (
     <div
@@ -94,6 +135,46 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
           />
         </div>
 
+        <div style={{width: 400, height: 200,}}>
+          <Bar
+            data={{
+              labels: freqStats.map(stat => stat.freq),
+              datasets: [
+                {
+                  label: 'Call count',
+                  backgroundColor: primary,
+                  data: freqStats.map(stat => stat.count)
+                }
+              ]
+
+            }}
+            width={200}
+            height={200}
+            options={{
+              maintainAspectRatio: false,
+              legend: {
+                labels: {
+                  fontColor: primary4,
+                }
+              },
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    fontColor: primary4,
+                    stepSize: 1,
+                    min: 1
+                  }
+                }],
+                xAxes: [{
+                  ticks: {
+                    fontColor: primary4,
+                  }
+                }]
+              }
+            }}
+          />
+        </div>
+
         <div style={styles.serverIP}>
           <span style={{color: primary4}}>Server IP</span>
           <input
@@ -114,6 +195,34 @@ export function Settings({visible, dirSize, freeSpace, handleClose}) {
           <Button
             title={'Set'}
             type={"input"}
+            onClick={() => window.location.reload()}
+          />
+        </div>
+
+        <div style={styles.showCallsSince}>
+          <span style={{color: primary4, marginRight: 8}}>Show calls since</span>
+
+          <Select
+            style={styles.select}
+            value={timeSelect.find(time=>time.value===showSince)}
+            options={timeSelect}
+            styles={customStyles}
+            theme={theme => ({
+              ...theme,
+              borderRadius: 4,
+              colors: {
+                ...theme.colors,
+                primary25: primary2,
+                primary: primary,
+              },
+            })}
+            onChange={(res) => {
+              setShowSince(res.value)
+            }}
+          />
+
+          <Button
+            title={'Set'}
             onClick={() => window.location.reload()}
           />
         </div>

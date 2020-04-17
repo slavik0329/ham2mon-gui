@@ -103,3 +103,27 @@ export function useHover() {
 
   return [ref, value];
 }
+
+export function getFreqStats(statFiles) {
+  let statObj = {};
+
+  for (let statFile of statFiles) {
+    const {freq} = statFile;
+
+    if (!statObj[freq]) {
+      statObj[freq] = {count: 1};
+    } else {
+      statObj[freq].count++;
+    }
+  }
+
+  const statEntries = Object.entries(statObj);
+  const orderedStats = statEntries.sort((a, b) => {
+    if (a[1].count > b[1].count) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }).map(entry => ({freq: entry[0], count: entry[1].count}))
+  return orderedStats;
+}

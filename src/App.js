@@ -6,7 +6,7 @@ import './App.css';
 import produce from "immer";
 import {BooleanOption} from "./BooleanOption";
 import {NowPlaying} from "./NowPlaying";
-import {useWindowSize} from "./Utils";
+import {getFreqStats, useWindowSize} from "./Utils";
 import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
@@ -80,6 +80,7 @@ function App() {
   const [dirSize, setDirSize] = useState(null);
   const [freeSpace, setFreeSpace] = useState(null);
   const [loadError, setLoadError] = useState(false);
+  const [freqStats, setFreqStats] = useState([]);
 
   const [mobileSettingsOpen, setMobileSettingsOpen] = useLocalStorage('mobileSettingsOpen', false);
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
@@ -90,6 +91,7 @@ function App() {
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
   const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
   const [serverIP, setServerIP] = useLocalStorage('setServerIP', window.location.hostname);
+  const [showSince, setShowSince] = useLocalStorage('setShowSince', 60 * 60 * 24);
 
   const audioRef = useRef(null);
   const filteredCallRefs = useRef([]);
@@ -116,11 +118,16 @@ function App() {
   const getData = async () => {
     try {
       const result = await axios.post(serverUrl + 'data', {
-        fromTime: Math.floor(Date.now()/1000) - (60 * 60 * 24)
+        fromTime: Math.floor(Date.now() / 1000) - showSince
       });
 
       const {files, dirSize, freeSpace} = result.data;
 
+      const statFiles = files.filter(file => file.time >= Math.floor(Date.now() / 1000) - (60 * 30));
+
+      const orderedStats = getFreqStats(statFiles);
+
+      setFreqStats(orderedStats);
       setDirSize(dirSize);
       setFreeSpace(freeSpace);
       setCalls(files);
@@ -232,6 +239,9 @@ function App() {
         dirSize={dirSize}
         freeSpace={freeSpace}
         handleClose={() => setShowSettings(false)}
+        freqStats={freqStats}
+        showSince={showSince}
+        setShowSince={setShowSince}
       />
       <div
         ref={optionsBlockRef}
@@ -403,9 +413,9 @@ function App() {
       </div>
 
       <div style={styles.records}>
-        {loadError?<div style={styles.loadError}>
+        {loadError ? <div style={styles.loadError}>
           There was an issue getting the data. Please ensure the settings are correct.
-        </div>:null}
+        </div> : null}
         <ReactList
           itemRenderer={(index, key) => {
             const call = filteredCalls[index];
