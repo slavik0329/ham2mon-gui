@@ -20,7 +20,7 @@ export function Settings({
                            showSince,
                            setShowSince,
                            setShowOnlyFreq
-}) {
+                         }) {
   const styles = {
     outerContainer: {
       position: "fixed",
@@ -64,7 +64,10 @@ export function Settings({
       marginTop: 14
     },
     restoreBlock: {
-      marginTop: 10
+      backgroundColor: "#FFF",
+      marginTop: 10,
+      padding: 10,
+      borderRadius: 4
     },
     serverIP: {
       marginTop: 10,
@@ -77,10 +80,23 @@ export function Settings({
       alignItems: "baseline"
     },
     restoreText: {
-      marginBottom: 10
+      marginBottom: 10,
+      fontSize: 18
     },
     timeSelectItem: {
       color: primary4
+    },
+    chart: {
+      width: 400,
+      // height: 200,
+      backgroundColor: "#FFF",
+      padding: 8,
+      borderRadius: 4
+    },
+    chartTitle: {
+      fontSize: 18,
+      textAlign: 'center',
+      marginBottom: 6
     }
   };
 
@@ -116,6 +132,8 @@ export function Settings({
     }
   ];
 
+  const selectValue = timeSelect.find(time => time.value === showSince);
+
   return visible ? (
     <div
       style={styles.outerContainer}
@@ -144,9 +162,10 @@ export function Settings({
           />
         </div>
 
-        <div style={{width: 400, height: 200,}}>
+        <div style={styles.chart}>
+          <div style={styles.chartTitle}>Activity for last {selectValue.label.props.children}</div>
           <Bar
-            getElementAtEvent={(el)=> {
+            getElementAtEvent={(el) => {
               setShowOnlyFreq(el[0]._view.label);
               handleClose();
             }}
@@ -217,7 +236,7 @@ export function Settings({
 
           <Select
             style={styles.select}
-            value={timeSelect.find(time=>time.value===showSince)}
+            value={selectValue}
             options={timeSelect}
             styles={customStyles}
             theme={theme => ({
@@ -233,10 +252,26 @@ export function Settings({
               setShowSince(res.value)
             }}
           />
+        </div>
 
-          <Button
-            title={'Set'}
-            onClick={() => window.location.reload()}
+        <div style={styles.restoreBlock}>
+          <div style={styles.restoreText}>Restore backup by uploading it below</div>
+          <input
+            type={'file'}
+            onChange={(event) => {
+              const fileReader = new FileReader();
+
+              fileReader.onloadend = () => {
+                if (window.confirm('Are you sure you want to restore this data?')) {
+                  const data = fileReader.result;
+                  writeLocalStorage(data);
+
+                  window.location.reload();
+                }
+              };
+
+              fileReader.readAsText(event.target.files[0]);
+            }}
           />
         </div>
 
@@ -252,38 +287,8 @@ export function Settings({
               }}
             />
           </div>
-          <div style={styles.restoreBlock}>
-            <div style={styles.restoreText}>Restore backup by uploading it below</div>
-            <input
-              type={'file'}
-              onChange={(event) => {
-                const fileReader = new FileReader();
 
-                fileReader.onloadend = () => {
-                  if (window.confirm('Are you sure you want to restore this data?')) {
-                    const data = fileReader.result;
-                    writeLocalStorage(data);
-
-                    window.location.reload();
-                  }
-                };
-
-                fileReader.readAsText(event.target.files[0]);
-              }}
-            />
-          </div>
         </div>
-
-        {/*{backupData ? <div style={styles.backupBlock}>*/}
-        {/*  <div>Copy data b</div>*/}
-        {/*  <textarea*/}
-        {/*    ref={backupTextRef}*/}
-        {/*    style={styles.textArea}*/}
-        {/*    onClick={()=>backupTextRef.current.select()}*/}
-        {/*  >*/}
-        {/*    {backupData}*/}
-        {/*  </textarea>*/}
-        {/*</div> : null}*/}
       </div>
     </div>
   ) : null;
