@@ -11,7 +11,16 @@ import Select from 'react-select'
 /**
  * @return {null}
  */
-export function Settings({visible, dirSize, freeSpace, handleClose, freqStats, showSince, setShowSince}) {
+export function Settings({
+                           visible,
+                           dirSize,
+                           freeSpace,
+                           handleClose,
+                           freqStats,
+                           showSince,
+                           setShowSince,
+                           setShowOnlyFreq
+}) {
   const styles = {
     outerContainer: {
       position: "fixed",
@@ -137,6 +146,10 @@ export function Settings({visible, dirSize, freeSpace, handleClose, freqStats, s
 
         <div style={{width: 400, height: 200,}}>
           <Bar
+            getElementAtEvent={(el)=> {
+              setShowOnlyFreq(el[0]._view.label);
+              handleClose();
+            }}
             data={{
               labels: freqStats.map(stat => stat.freq),
               datasets: [
@@ -256,8 +269,6 @@ export function Settings({visible, dirSize, freeSpace, handleClose, freqStats, s
                 };
 
                 fileReader.readAsText(event.target.files[0]);
-
-                console.log(event.target.files[0])
               }}
             />
           </div>

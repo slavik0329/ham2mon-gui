@@ -245,6 +245,7 @@ function App() {
         freqStats={freqStats}
         showSince={showSince}
         setShowSince={setShowSince}
+        setShowOnlyFreq={setShowOnlyFreq}
       />
       <div
         ref={optionsBlockRef}
