@@ -2,7 +2,7 @@ import React from "react";
 import {primary, primary2, primary4} from "./color";
 import {DataItem} from "./DataItem";
 import {FaTimes} from "react-icons/fa";
-import {download, getLocalStorage, sec2time, writeLocalStorage} from "./Utils";
+import {download, getLocalStorage, sec2time, useWindowSize, writeLocalStorage} from "./Utils";
 import {useLocalStorage} from "./useLocalStorage";
 import {Button} from "./Button";
 import {Bar} from 'react-chartjs-2';
@@ -30,6 +30,7 @@ export function Settings({
       boxSizing: "border-box",
       backgroundColor: "#00000055",
       height: '100%',
+      overflowY: 'scroll',
     },
     container: {
       backgroundColor: primary2,
@@ -52,7 +53,8 @@ export function Settings({
     },
     dataItems: {
       display: "flex",
-      marginBottom: 20
+      flexWrap:'wrap',
+      marginBottom: 8
     },
     closeButton: {
       position: "absolute",
