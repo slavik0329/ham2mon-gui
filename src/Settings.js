@@ -2,7 +2,7 @@ import React from "react";
 import {primary, primary2, primary4} from "./color";
 import {DataItem} from "./DataItem";
 import {FaTimes} from "react-icons/fa";
-import {download, getLocalStorage, writeLocalStorage} from "./Utils";
+import {download, getLocalStorage, sec2time, writeLocalStorage} from "./Utils";
 import {useLocalStorage} from "./useLocalStorage";
 import {Button} from "./Button";
 import {Bar} from 'react-chartjs-2';
@@ -67,7 +67,8 @@ export function Settings({
       backgroundColor: "#FFF",
       marginTop: 10,
       padding: 10,
-      borderRadius: 4
+      borderRadius: 4,
+      maxWidth: 600
     },
     serverIP: {
       marginTop: 10,
@@ -81,13 +82,13 @@ export function Settings({
     },
     restoreText: {
       marginBottom: 10,
-      fontSize: 18
+      fontSize: 18,
     },
     timeSelectItem: {
       color: primary4
     },
     chart: {
-      width: 400,
+      maxWidth: 600,
       // height: 200,
       backgroundColor: "#FFF",
       padding: 8,
@@ -129,6 +130,14 @@ export function Settings({
     {
       label: <div style={styles.timeSelectItem}>1 day</div>,
       value: 60 * 60 * 24
+    },
+    {
+      label: <div style={styles.timeSelectItem}>1 week</div>,
+      value: 60 * 60 * 24 * 7
+    },
+    {
+      label: <div style={styles.timeSelectItem}>Forever</div>,
+      value: 60 * 60 * 24 * 10000
     }
   ];
 
@@ -160,6 +169,14 @@ export function Settings({
             type={"MB"}
             value={(freeSpace / 1024 / 1024).toFixed(2)}
           />
+
+          <DataItem
+            title="Total audio"
+            type={"MB"}
+            value={sec2time(dirSize / 16000, true)}
+          />
+
+
         </div>
 
         <div style={styles.chart}>
@@ -180,7 +197,6 @@ export function Settings({
               ]
 
             }}
-            width={200}
             height={200}
             options={{
               maintainAspectRatio: false,

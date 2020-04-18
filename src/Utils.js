@@ -1,17 +1,21 @@
 import {useEffect, useRef, useState} from "react";
 
-export const sec2time = timeInSeconds => {
+export const sec2time = (timeInSeconds, useHours) => {
   const pad = function (num, size) {
     return ('000' + num).slice(size * -1);
   };
 
   const time = parseFloat(timeInSeconds).toFixed(3);
-  // hours = Math.floor(time / 60 / 60),
+  const hours = Math.floor(time / 60 / 60);
   const minutes = Math.floor(time / 60) % 60;
   const seconds = Math.floor(time - minutes * 60);
   // milliseconds = time.slice(-3);
+  let hoursStr = '';
+  if (useHours) {
+    hoursStr = pad(minutes, 2) + ':';
+  }
 
-  return pad(minutes, 2) + ':' + pad(seconds, 2);
+  return  hoursStr + pad(minutes, 2) + ':' + pad(seconds, 2);
 };
 
 export function useWindowSize() {
