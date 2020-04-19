@@ -107,7 +107,9 @@ function App() {
   const uniqueFreqs = [...new Set(allFreqs)];
 
   const unlistenedCalls = calls.filter(call => !listenedArr.includes(call.file));
+
   let filteredFreqs = uniqueFreqs.filter(freq => !hiddenArr.includes(freq));
+
   if (showHidden) {
     filteredFreqs = uniqueFreqs.filter(freq => hiddenArr.includes(freq));
   }
