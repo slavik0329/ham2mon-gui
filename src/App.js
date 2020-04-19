@@ -6,13 +6,14 @@ import './App.css';
 import produce from "immer";
 import {BooleanOption} from "./BooleanOption";
 import {NowPlaying} from "./NowPlaying";
-import {getFreqStats, useWindowSize} from "./Utils";
+import {getFreqStats} from "./Utils";
 import {useHotkeys} from 'react-hotkeys-hook';
 import Select from 'react-select'
 import useDimensions from 'react-use-dimensions';
 import {primary, primary2, primary4, secondary25} from "./color";
 import ReactList from 'react-list';
 import {Settings} from "./Settings";
+import {useWindowSize} from "./hooks/useWindowSize";
 
 function App() {
   const windowSize = useWindowSize();
@@ -122,8 +123,6 @@ function App() {
       });
 
       const {files, dirSize, freeSpace} = result.data;
-
-      // const statFiles = files.filter(file => file.time >= Math.floor(Date.now() / 1000) - (60 * 60 * 24));
 
       setDirSize(dirSize);
       setFreeSpace(freeSpace);

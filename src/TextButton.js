@@ -1,5 +1,5 @@
 import React from "react";
-import {useHover} from "./Utils";
+import {useHover} from "./hooks/useHover";
 
 export function TextButton({title, onClick}) {
   const [hoverRef, isHovered] = useHover();

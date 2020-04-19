@@ -1,6 +1,6 @@
 import React from "react";
 import {secondary} from "./color";
-import {useHover} from "./Utils";
+import {useHover} from "./hooks/useHover";
 
 export function BooleanOption({
                                 title,

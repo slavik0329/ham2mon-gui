@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import dayjs from "dayjs";
-import {isChrome, useWindowSize} from "./Utils";
+import {isChrome} from "./Utils";
 import {secondary, secondary25} from "./color";
+import {useWindowSize} from "./hooks/useWindowSize";
 
 export function NowPlaying({call, freqData}) {
   const windowSize = useWindowSize();

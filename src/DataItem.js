@@ -1,6 +1,6 @@
 import React from "react";
 import {primary, primary2, primary3, primary4} from "./color";
-import {useWindowSize} from "./Utils";
+import {useWindowSize} from "./hooks/useWindowSize";
 
 export function DataItem({title, value, type}) {
   const windowSize = useWindowSize();
