@@ -236,6 +236,14 @@ function App() {
     })
   };
 
+  const handleDeleteBefore = async (beforeTime) => {
+    await axios.post(`${serverUrl}deleteBefore`, {
+      deleteBeforeTime: Math.floor(Date.now() / 1000) - beforeTime
+    });
+
+    window.location.reload();
+  };
+
   return (
     <div>
       <Settings
@@ -247,6 +255,7 @@ function App() {
         showSince={showSince}
         setShowSince={setShowSince}
         setShowOnlyFreq={setShowOnlyFreq}
+        handleDeleteBefore={handleDeleteBefore}
       />
       <div
         ref={optionsBlockRef}

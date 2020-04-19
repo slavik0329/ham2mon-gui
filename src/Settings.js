@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {primary, primary2, primary4} from "./color";
 import {DataItem} from "./DataItem";
 import {FaTimes} from "react-icons/fa";
@@ -6,8 +6,8 @@ import {download, getLocalStorage, sec2time, writeLocalStorage} from "./Utils";
 import {useLocalStorage} from "./useLocalStorage";
 import {Button} from "./Button";
 import {Bar} from 'react-chartjs-2';
-import Select from 'react-select'
-import {useWindowSize} from "./hooks/useWindowSize";
+import Select from 'react-select';
+import axios from 'axios';
 
 /**
  * @return {null}
@@ -20,7 +20,8 @@ export function Settings({
                            freqStats,
                            showSince,
                            setShowSince,
-                           setShowOnlyFreq
+                           setShowOnlyFreq,
+                           handleDeleteBefore
                          }) {
   const styles = {
     outerContainer: {
@@ -54,7 +55,7 @@ export function Settings({
     },
     dataItems: {
       display: "flex",
-      flexWrap:'wrap',
+      flexWrap: 'wrap',
       marginBottom: 8
     },
     closeButton: {
@@ -78,6 +79,12 @@ export function Settings({
       color: primary
     },
     showCallsSince: {
+      marginTop: 10,
+      color: primary,
+      display: "flex",
+      alignItems: "baseline"
+    },
+    removeCallsBefore: {
       marginTop: 10,
       color: primary,
       display: "flex",
@@ -135,6 +142,14 @@ export function Settings({
       value: 60 * 60 * 24
     },
     {
+      label: <div style={styles.timeSelectItem}>2 days</div>,
+      value: 60 * 60 * 24 * 2
+    },
+    {
+      label: <div style={styles.timeSelectItem}>3 days</div>,
+      value: 60 * 60 * 24 * 3
+    },
+    {
       label: <div style={styles.timeSelectItem}>1 week</div>,
       value: 60 * 60 * 24 * 7
     },
@@ -144,7 +159,10 @@ export function Settings({
     }
   ];
 
-  const selectValue = timeSelect.find(time => time.value === showSince);
+  const [removeBefore, setRemoveBefore] = useState(60 * 60 * 24);
+
+  const callsSinceSelectValue = timeSelect.find(time => time.value === showSince);
+  const removeBeforeSelectValue = timeSelect.find(time => time.value === removeBefore);
 
   return visible ? (
     <div
@@ -183,7 +201,7 @@ export function Settings({
         </div>
 
         <div style={styles.chart}>
-          <div style={styles.chartTitle}>Activity for last {selectValue.label.props.children}</div>
+          <div style={styles.chartTitle}>Activity for last {callsSinceSelectValue.label.props.children}</div>
           <Bar
             getElementAtEvent={(el) => {
               setShowOnlyFreq(el[0]._view.label);
@@ -255,7 +273,7 @@ export function Settings({
 
           <Select
             style={styles.select}
-            value={selectValue}
+            value={callsSinceSelectValue}
             options={timeSelect}
             styles={customStyles}
             theme={theme => ({
@@ -269,6 +287,38 @@ export function Settings({
             })}
             onChange={(res) => {
               setShowSince(res.value)
+            }}
+          />
+        </div>
+
+        <div style={styles.removeCallsBefore}>
+          <span style={{color: primary4, marginRight: 8}}>Remove calls before</span>
+
+          <Select
+            style={styles.select}
+            value={removeBeforeSelectValue}
+            options={timeSelect}
+            styles={customStyles}
+            theme={theme => ({
+              ...theme,
+              borderRadius: 4,
+              colors: {
+                ...theme.colors,
+                primary25: primary2,
+                primary: primary,
+              },
+            })}
+            onChange={(res) => {
+              setRemoveBefore(res.value)
+            }}
+          />
+
+          <Button
+            title={'Remove'}
+            onClick={async () => {
+              if (window.confirm(`Are you sure you want to delete calls before ${removeBeforeSelectValue.label.props.children}`)) {
+                handleDeleteBefore(removeBefore);
+              }
             }}
           />
         </div>

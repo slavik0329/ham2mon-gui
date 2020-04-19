@@ -59,9 +59,7 @@ app.post('/data', async (req, res) => {
   });
 });
 
-app.post('/delete', async (req, res) => {
-  const {files} = req.body;
-
+function deleteFiles(files) {
   for (let file of files) {
     try {
       fs.unlinkSync(wavDir + "/" + sanitize(file));
@@ -70,6 +68,25 @@ app.post('/delete', async (req, res) => {
       console.log("Error deleting file " + file, e);
     }
   }
+}
+
+app.post('/deleteBefore', async (req, res) => {
+  const {deleteBeforeTime} = req.body;
+
+  const allFiles = await getFileData();
+  const filesToDelete = allFiles
+    .filter(file=>file.time < deleteBeforeTime)
+    .map(file=>file.file);
+
+  deleteFiles(filesToDelete);
+
+  res.json({});
+});
+
+app.post('/delete', async (req, res) => {
+  const {files} = req.body;
+
+  deleteFiles(files);
 
   res.json({});
 });
@@ -101,9 +118,7 @@ async function getFileData() {
 
   return fileData.filter(
     file => {
-      const beforeTime = parseInt((Date.now() / 1000) - (60 * 60 * 3));
       return file.size > 60000
-      // && parseInt(file.time) > beforeTime)
     }
   );
 }
