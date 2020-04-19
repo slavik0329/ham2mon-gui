@@ -15,7 +15,7 @@ export const sec2time = (timeInSeconds, useHours) => {
     hoursStr = pad(minutes, 2) + ':';
   }
 
-  return  hoursStr + pad(minutes, 2) + ':' + pad(seconds, 2);
+  return hoursStr + pad(minutes, 2) + ':' + pad(seconds, 2);
 };
 
 export function useWindowSize() {
@@ -109,25 +109,12 @@ export function useHover() {
 }
 
 export function getFreqStats(statFiles) {
-  let statObj = {};
+  const statObj = statFiles.reduce((totals, file) => {
+    totals[file.freq] = (totals[file.freq] || 0) + 1;
+    return totals;
+  }, {});
 
-  for (let statFile of statFiles) {
-    const {freq} = statFile;
+  const sortedStats = Object.entries(statObj).sort((a, b) => a[1] > b[1] ? -1 : 1);
 
-    if (!statObj[freq]) {
-      statObj[freq] = {count: 1};
-    } else {
-      statObj[freq].count++;
-    }
-  }
-
-  const statEntries = Object.entries(statObj);
-  const orderedStats = statEntries.sort((a, b) => {
-    if (a[1].count > b[1].count) {
-      return -1;
-    } else {
-      return 1;
-    }
-  }).map(entry => ({freq: entry[0], count: entry[1].count}))
-  return orderedStats;
+  return sortedStats.map(stat => ({freq: stat[0], count: stat[1]}));
 }

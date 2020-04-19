@@ -138,7 +138,7 @@ function App() {
     const orderedStats = getFreqStats(calls);
 
     setFreqStats(orderedStats);
-  }, [calls, showSince])
+  }, [calls, showSince]);
 
   const frequencyListItems = filteredFreqs.map(freq => {
     const freqItem = freqData.find(freqItem => freqItem.freq === freq);
