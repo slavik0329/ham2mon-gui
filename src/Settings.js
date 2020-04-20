@@ -7,7 +7,6 @@ import {useLocalStorage} from "./useLocalStorage";
 import {Button} from "./Button";
 import {Bar} from 'react-chartjs-2';
 import Select from 'react-select';
-import axios from 'axios';
 
 /**
  * @return {null}
@@ -125,6 +124,10 @@ export function Settings({
   };
 
   const timeSelect = [
+    {
+      label: <div style={styles.timeSelectItem}>10 min</div>,
+      value: 60 * 10
+    },
     {
       label: <div style={styles.timeSelectItem}>30 min</div>,
       value: 60 * 30
@@ -292,7 +295,7 @@ export function Settings({
         </div>
 
         <div style={styles.removeCallsBefore}>
-          <span style={{color: primary4, marginRight: 8}}>Remove calls before</span>
+          <span style={{color: primary4, marginRight: 8}}>Remove calls older than</span>
 
           <Select
             style={styles.select}
@@ -316,7 +319,7 @@ export function Settings({
           <Button
             title={'Remove'}
             onClick={async () => {
-              if (window.confirm(`Are you sure you want to delete calls before ${removeBeforeSelectValue.label.props.children}`)) {
+              if (window.confirm(`Are you sure you want to delete calls older than ${removeBeforeSelectValue.label.props.children}?`)) {
                 handleDeleteBefore(removeBefore);
               }
             }}
