@@ -6,6 +6,7 @@ GUI for ham2mon wav output
 Node.js
 Yarn (optional)
 
+ham2mon - https://github.com/madengr/ham2mon
 ### Installation
 
 ```
