@@ -70,6 +70,13 @@ function App() {
       padding: 10,
       margin: 10,
       borderRadius: 4
+    },
+    loading: {
+      color: primary4,
+      padding: 10,
+      margin: 10,
+      textAlign: 'center',
+      fontWeight: 400
     }
   };
 
@@ -82,6 +89,7 @@ function App() {
   const [freeSpace, setFreeSpace] = useState(null);
   const [loadError, setLoadError] = useState(false);
   const [freqStats, setFreqStats] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [mobileSettingsOpen, setMobileSettingsOpen] = useLocalStorage('mobileSettingsOpen', false);
   const [listenedArr, setListenedArr] = useLocalStorage('listenedArr', []);
@@ -119,6 +127,8 @@ function App() {
   }, [showSince]);
 
   const getData = async () => {
+    setLoading(true);
+
     try {
       const result = await axios.post(serverUrl + 'data', {
         fromTime: Math.floor(Date.now() / 1000) - showSince
@@ -133,9 +143,10 @@ function App() {
       setLoadError(true);
     }
 
+    setLoading(false);
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     const orderedStats = getFreqStats(calls);
 
     setFreqStats(orderedStats);
@@ -430,73 +441,78 @@ function App() {
         {loadError ? <div style={styles.loadError}>
           There was an issue getting the data. Please ensure the settings are correct.
         </div> : null}
-        <ReactList
-          itemRenderer={(index, key) => {
-            const call = filteredCalls[index];
 
-            return (
+        {!loading && !filteredCalls.length ? <div style={styles.loadError}>
+          No calls to display. Try changing frequency.
+        </div> : null}
+        {loading ? <div style={styles.loading}>Loading calls...</div> :
+          <ReactList
+            itemRenderer={(index, key) => {
+              const call = filteredCalls[index];
 
-              <div
-                key={index}
-                ref={el => filteredCallRefs.current[index] = el}
-              >
-                <Call
-                  data={call}
-                  autoplay={autoplay}
-                  selected={selected === call.file}
-                  listened={listenedArr.includes(call.file)}
-                  hidden={hiddenArr.includes(call.freq)}
-                  liked={likedArr.includes(call.freq)}
-                  freqData={freqData}
-                  setFreqData={setFreqData}
-                  onClick={() => {
-                    setSelected(call.file);
+              return (
 
-                    setListenedArr([
-                      ...listenedArr,
-                      call.file
-                    ]);
-                  }}
-                  onLike={() => {
-                    setLikedArr([
-                      ...likedArr,
-                      call.freq
-                    ]);
-                  }}
-                  onHide={() => {
-                    setHiddenArr([
-                      ...hiddenArr,
-                      call.freq
-                    ]);
-                  }}
-                  onUnhide={() => {
-                    setHiddenArr(hiddenArr.filter(freq => freq !== call.freq));
-                  }}
-                  onUnlike={() => {
-                    setLikedArr(likedArr.filter(freq => freq !== call.freq));
-                  }}
-                  handleMarkRead={async (freq) => {
-                    if (!window.confirm("Are you sure you want to mark all as read?")) {
-                      return false;
-                    }
+                <div
+                  key={index}
+                  ref={el => filteredCallRefs.current[index] = el}
+                >
+                  <Call
+                    data={call}
+                    autoplay={autoplay}
+                    selected={selected === call.file}
+                    listened={listenedArr.includes(call.file)}
+                    hidden={hiddenArr.includes(call.freq)}
+                    liked={likedArr.includes(call.freq)}
+                    freqData={freqData}
+                    setFreqData={setFreqData}
+                    onClick={() => {
+                      setSelected(call.file);
 
-                    const itemsToMark = unlistenedCalls.filter(call => call.freq === freq);
-                    const tmpListenedArr = await produce(listenedArr, async (draft) => {
-                      itemsToMark.forEach((call) => {
-                        draft.push(call.file);
-                      })
-                    });
+                      setListenedArr([
+                        ...listenedArr,
+                        call.file
+                      ]);
+                    }}
+                    onLike={() => {
+                      setLikedArr([
+                        ...likedArr,
+                        call.freq
+                      ]);
+                    }}
+                    onHide={() => {
+                      setHiddenArr([
+                        ...hiddenArr,
+                        call.freq
+                      ]);
+                    }}
+                    onUnhide={() => {
+                      setHiddenArr(hiddenArr.filter(freq => freq !== call.freq));
+                    }}
+                    onUnlike={() => {
+                      setLikedArr(likedArr.filter(freq => freq !== call.freq));
+                    }}
+                    handleMarkRead={async (freq) => {
+                      if (!window.confirm("Are you sure you want to mark all as read?")) {
+                        return false;
+                      }
 
-                    setListenedArr(tmpListenedArr);
-                  }}
-                />
-              </div>
-            );
-          }}
-          minSize={50}
-          length={filteredCalls.length}
-          type='uniform'
-        />
+                      const itemsToMark = unlistenedCalls.filter(call => call.freq === freq);
+                      const tmpListenedArr = await produce(listenedArr, async (draft) => {
+                        itemsToMark.forEach((call) => {
+                          draft.push(call.file);
+                        })
+                      });
+
+                      setListenedArr(tmpListenedArr);
+                    }}
+                  />
+                </div>
+              );
+            }}
+            minSize={50}
+            length={filteredCalls.length}
+            type='uniform'
+          />}
       </div>
     </div>
   );
