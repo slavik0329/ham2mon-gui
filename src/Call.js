@@ -7,6 +7,7 @@ import {sec2time} from "./Utils";
 import {primary2, primary4, secondary2, secondary25} from "./color";
 import {SmallDataBlock} from "./SmallDataBlock";
 import {TextButton} from "./TextButton";
+import {useHover} from "./hooks/useHover";
 
 function Call({
                 data,
@@ -22,10 +23,11 @@ function Call({
                 freqData,
                 setFreqData,
               }) {
+  const [hoverRef, isHovered] = useHover();
 
   const styles = {
     item: {
-      border: "1px solid #eee",
+      border: `1px solid #eee`,
       padding: "4px 6px",
       margin: "4px 4px",
       display: 'flex',
@@ -93,17 +95,20 @@ function Call({
     bg = primary2;
   }
 
+  if (isHovered) {
+    border= '1px solid #ccc';
+  }
+
   if (selected) {
     border = "2px solid #f79c51";
   }
-
-
 
   const freqItem = freqData.find(freqItem => freqItem.freq === freq);
   const freqItemIndex = freqData.findIndex(freqItem => freqItem.freq === freq);
 
   return (
     <div
+      ref={hoverRef}
       style={{
         ...styles.item,
         color: color,
