@@ -123,6 +123,7 @@ function App() {
   }
 
   useEffect(() => {
+    setCalls([]);
     getData();
   }, [showSince]);
 
@@ -267,6 +268,7 @@ function App() {
         setShowSince={setShowSince}
         setShowOnlyFreq={setShowOnlyFreq}
         handleDeleteBefore={handleDeleteBefore}
+        freqData={freqData}
       />
       <div
         ref={optionsBlockRef}

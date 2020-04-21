@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {primary, primary2, primary4} from "./color";
 import {DataItem} from "./DataItem";
 import {FaTimes} from "react-icons/fa";
@@ -11,7 +11,7 @@ import Select from 'react-select';
 /**
  * @return {null}
  */
-export function Settings({
+export const  Settings = ({
                            visible,
                            dirSize,
                            freeSpace,
@@ -20,8 +20,9 @@ export function Settings({
                            showSince,
                            setShowSince,
                            setShowOnlyFreq,
-                           handleDeleteBefore
-                         }) {
+                           handleDeleteBefore,
+                           freqData
+                         }) => {
   const styles = {
     outerContainer: {
       position: "fixed",
@@ -110,6 +111,15 @@ export function Settings({
     }
   };
 
+  const namedFreqStats = freqStats.map(freqStat => {
+    const name = freqData.find(item => item.freq === freqStat.freq);
+
+    return {
+      ...freqStat,
+      name: name?name.name:""
+    }
+  });
+
   const [serverIP, setServerIP] = useLocalStorage('setServerIP', '127.0.0.1');
 
   const customStyles = {
@@ -123,7 +133,7 @@ export function Settings({
     })
   };
 
-  const timeSelect = [
+  const timeSelect = useMemo(()=>[
     {
       label: <div style={styles.timeSelectItem}>10 min</div>,
       value: 60 * 10
@@ -160,12 +170,56 @@ export function Settings({
       label: <div style={styles.timeSelectItem}>Forever</div>,
       value: 60 * 60 * 24 * 10000
     }
-  ];
+  ], []);
 
   const [removeBefore, setRemoveBefore] = useState(60 * 60 * 24);
 
   const callsSinceSelectValue = timeSelect.find(time => time.value === showSince);
   const removeBeforeSelectValue = timeSelect.find(time => time.value === removeBefore);
+
+  const getBarChart = useCallback(() => {
+    console.log('getting bar')
+    return <Bar
+      getElementAtEvent={(el) => {
+        setShowOnlyFreq(el[0]._view.label.split(' ')[0]);
+        handleClose();
+      }}
+      data={{
+        labels: namedFreqStats.map(stat => stat.freq + " " + stat.name.substr(0, 8)),
+        datasets: [
+          {
+            label: 'Call count',
+            backgroundColor: primary,
+            data: freqStats.map(stat => stat.count)
+          }
+        ]
+
+      }}
+      height={200}
+      options={{
+        maintainAspectRatio: false,
+        legend: {
+          labels: {
+            fontColor: primary4,
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: primary4,
+              stepSize: 1,
+              min: 1
+            }
+          }],
+          xAxes: [{
+            ticks: {
+              fontColor: primary4,
+            }
+          }]
+        }
+      }}
+    />;
+  }, [freqStats]);
 
   return visible ? (
     <div
@@ -205,46 +259,7 @@ export function Settings({
 
         <div style={styles.chart}>
           <div style={styles.chartTitle}>Activity for last {callsSinceSelectValue.label.props.children}</div>
-          <Bar
-            getElementAtEvent={(el) => {
-              setShowOnlyFreq(el[0]._view.label);
-              handleClose();
-            }}
-            data={{
-              labels: freqStats.map(stat => stat.freq),
-              datasets: [
-                {
-                  label: 'Call count',
-                  backgroundColor: primary,
-                  data: freqStats.map(stat => stat.count)
-                }
-              ]
-
-            }}
-            height={200}
-            options={{
-              maintainAspectRatio: false,
-              legend: {
-                labels: {
-                  fontColor: primary4,
-                }
-              },
-              scales: {
-                yAxes: [{
-                  ticks: {
-                    fontColor: primary4,
-                    stepSize: 1,
-                    min: 1
-                  }
-                }],
-                xAxes: [{
-                  ticks: {
-                    fontColor: primary4,
-                  }
-                }]
-              }
-            }}
-          />
+          {getBarChart()}
         </div>
 
         <div style={styles.serverIP}>
