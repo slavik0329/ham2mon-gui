@@ -51,7 +51,6 @@ app.post('/data', async (req, res) => {
     fileCache.set('allFiles', fileData);
   }
 
-
   let dirSize = fileCache.get('dirSize');
   let availableSpace = fileCache.get('availableSpace');
 
@@ -97,6 +96,9 @@ app.post('/deleteBefore', async (req, res) => {
     .map(file => file.file);
 
   deleteFiles(filesToDelete);
+
+  fileCache.del('dirSize');
+  fileCache.del('availableSpace');
 
   res.json({});
 });
