@@ -11,7 +11,7 @@ import Select from 'react-select';
 /**
  * @return {null}
  */
-export const  Settings = ({
+export const Settings = ({
                            visible,
                            dirSize,
                            freeSpace,
@@ -78,16 +78,11 @@ export const  Settings = ({
       marginTop: 10,
       color: primary
     },
-    showCallsSince: {
+    selectBlock: {
       marginTop: 10,
       color: primary,
       display: "flex",
-      alignItems: "baseline"
-    },
-    removeCallsBefore: {
-      marginTop: 10,
-      color: primary,
-      display: "flex",
+      flexWrap: "wrap",
       alignItems: "baseline"
     },
     restoreText: {
@@ -97,9 +92,13 @@ export const  Settings = ({
     timeSelectItem: {
       color: primary4
     },
+    selectBlockText: {
+      color: primary4,
+      marginRight: 8,
+      marginBottom: 4
+    },
     chart: {
       maxWidth: 600,
-      // height: 200,
       backgroundColor: "#FFF",
       padding: 8,
       borderRadius: 4
@@ -116,7 +115,7 @@ export const  Settings = ({
 
     return {
       ...freqStat,
-      name: name?name.name:""
+      name: name ? name.name : ""
     }
   });
 
@@ -133,7 +132,7 @@ export const  Settings = ({
     })
   };
 
-  const timeSelect = useMemo(()=>[
+  const timeSelect = useMemo(() => [
     {
       label: <div style={styles.timeSelectItem}>10 min</div>,
       value: 60 * 10
@@ -262,7 +261,7 @@ export const  Settings = ({
           {getBarChart()}
         </div>
 
-        <div style={styles.serverIP}>
+        <div style={styles.selectBlock}>
           <span style={{color: primary4}}>Server IP</span>
           <input
             style={{
@@ -286,8 +285,8 @@ export const  Settings = ({
           />
         </div>
 
-        <div style={styles.showCallsSince}>
-          <span style={{color: primary4, marginRight: 8}}>Show calls since</span>
+        <div style={styles.selectBlock}>
+          <span style={styles.selectBlockText}>Show calls since</span>
 
           <Select
             style={styles.select}
@@ -309,8 +308,8 @@ export const  Settings = ({
           />
         </div>
 
-        <div style={styles.removeCallsBefore}>
-          <span style={{color: primary4, marginRight: 8}}>Remove calls older than</span>
+        <div style={styles.selectBlock}>
+          <span style={styles.selectBlockText}>Remove calls older than</span>
 
           <Select
             style={styles.select}
