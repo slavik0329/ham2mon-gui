@@ -1,5 +1,5 @@
 import React from "react";
-import {primary, primary2, primary3, primary4} from "./color";
+import {primary, primary4} from "./color";
 import {useWindowSize} from "./hooks/useWindowSize";
 
 export function DataItem({title, value, type}) {
@@ -19,7 +19,6 @@ export function DataItem({title, value, type}) {
     },
     title: {
       fontSize: 14,
-      // fontWeight: 500,
       marginBottom: 2,
     },
     value: {

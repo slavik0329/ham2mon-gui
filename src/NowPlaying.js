@@ -75,7 +75,6 @@ export function NowPlaying({call, freqData}) {
 
     setTickOn(tickRef.current);
     setTimeout(tick, 1000);
-
   }
 
   useEffect(() => {

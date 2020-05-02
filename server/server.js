@@ -114,7 +114,7 @@ app.post('/delete', async (req, res) => {
 app.use('/static', express.static(wavDir));
 app.use('/', express.static(path.join(__dirname, '../build')));
 
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 
 async function getFileData() {
   const files = await readdir(wavDir);
@@ -133,7 +133,7 @@ async function getFileData() {
     };
   });
 
-  console.log(fileData.length)
+  console.log(fileData.length);
 
   return fileData.filter(
     file => {

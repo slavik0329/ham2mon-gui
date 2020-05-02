@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import {FaRegClock, FaRegHdd} from 'react-icons/fa';
 import produce from "immer"
 import {sec2time} from "./Utils";
-import {primary2, primary4, secondary2, secondary25} from "./color";
+import {primary2, primary4, secondary2} from "./color";
 import {SmallDataBlock} from "./SmallDataBlock";
 import {TextButton} from "./TextButton";
 import {useHover} from "./hooks/useHover";

@@ -74,10 +74,6 @@ export const Settings = ({
       borderRadius: 4,
       maxWidth: 600
     },
-    serverIP: {
-      marginTop: 10,
-      color: primary
-    },
     selectBlock: {
       marginTop: 10,
       color: primary,
@@ -177,7 +173,6 @@ export const Settings = ({
   const removeBeforeSelectValue = timeSelect.find(time => time.value === removeBefore);
 
   const getBarChart = useCallback(() => {
-    console.log('getting bar')
     return <Bar
       getElementAtEvent={(el) => {
         setShowOnlyFreq(el[0]._view.label.split(' ')[0]);
@@ -378,4 +373,4 @@ export const Settings = ({
       </div>
     </div>
   ) : null;
-}
+};
