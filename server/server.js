@@ -51,8 +51,18 @@ app.post('/data', async (req, res) => {
     fileCache.set('allFiles', fileData);
   }
 
-  const dirSize = await getSizePromise(wavDir);
-  const {available} = await disk.check(wavDir);
+
+  let dirSize = fileCache.get('dirSize');
+  let availableSpace = fileCache.get('availableSpace');
+
+  if (dirSize === undefined) {
+    dirSize = await getSizePromise(wavDir);
+    const result = await disk.check(wavDir);
+    availableSpace = result.available;
+
+    fileCache.set('dirSize', dirSize, 60 * 60);
+    fileCache.set('availableSpace', availableSpace, 60 * 60);
+  }
 
   const {fromTime} = req.body;
 
@@ -63,7 +73,7 @@ app.post('/data', async (req, res) => {
   res.json({
     files: fileData,
     dirSize,
-    freeSpace: available
+    freeSpace: availableSpace
   });
 });
 
