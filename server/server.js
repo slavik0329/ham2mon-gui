@@ -10,6 +10,8 @@ const disk = require('diskusage');
 const express = require('express');
 const app = express();
 const port = 8080;
+const NodeCache = require("node-cache");
+const fileCache = new NodeCache({stdTTL: 10});
 
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
@@ -42,14 +44,20 @@ try {
 }
 
 app.post('/data', async (req, res) => {
-  let fileData = await getFileData();
+  let fileData = fileCache.get("allFiles");
+
+  if (fileData === undefined) {
+    fileData = await getFileData();
+    fileCache.set('allFiles', fileData);
+  }
+
   const dirSize = await getSizePromise(wavDir);
   const {available} = await disk.check(wavDir);
 
   const {fromTime} = req.body;
 
   if (fromTime) {
-    fileData = fileData.filter(file=>file.time >= fromTime);
+    fileData = fileData.filter(file => file.time >= fromTime);
   }
 
   res.json({
@@ -75,8 +83,8 @@ app.post('/deleteBefore', async (req, res) => {
 
   const allFiles = await getFileData();
   const filesToDelete = allFiles
-    .filter(file=>file.time < deleteBeforeTime)
-    .map(file=>file.file);
+    .filter(file => file.time < deleteBeforeTime)
+    .map(file => file.file);
 
   deleteFiles(filesToDelete);
 
@@ -97,7 +105,6 @@ app.use('/', express.static(path.join(__dirname, '../build')));
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
 
 async function getFileData() {
-
   const files = await readdir(wavDir);
 
   const fileData = files.map(file => {
