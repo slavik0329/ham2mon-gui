@@ -441,10 +441,10 @@ function App() {
 
       <div style={styles.records}>
         {loadError ? <div style={styles.loadError}>
-          There was an issue getting the data. Please ensure the settings are correct.
+          There was an issue connecting to the server. Please ensure the settings are correct.
         </div> : null}
 
-        {!loading && !filteredCalls.length ? <div style={styles.loadError}>
+        {!loading && !filteredCalls.length && !loadError ? <div style={styles.loadError}>
           No calls to display. Try changing frequency.
         </div> : null}
         {loading ? <div style={styles.loading}>Loading calls...</div> :
