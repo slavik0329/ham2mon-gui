@@ -43,13 +43,20 @@ try {
   process.exit();
 }
 
-app.post('/data', async (req, res) => {
+async function getAllFiles() {
   let fileData = fileCache.get("allFiles");
 
   if (fileData === undefined) {
     fileData = await getFileData();
     fileCache.set('allFiles', fileData);
   }
+  return fileData;
+}
+
+setInterval(getAllFiles, 9000);
+
+app.post('/data', async (req, res) => {
+  let fileData = await getAllFiles();
 
   let dirSize = fileCache.get('dirSize');
   let availableSpace = fileCache.get('availableSpace');
