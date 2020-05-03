@@ -43,17 +43,17 @@ try {
   process.exit();
 }
 
-async function getAllFiles() {
+async function getAllFiles(forceUpdate) {
   let fileData = fileCache.get("allFiles");
 
-  if (fileData === undefined) {
+  if (fileData === undefined || forceUpdate) {
     fileData = await getFileData();
     fileCache.set('allFiles', fileData);
   }
   return fileData;
 }
 
-setInterval(getAllFiles, 9000);
+setInterval(getAllFiles.bind(this, true), 9000);
 
 app.post('/data', async (req, res) => {
   let fileData = await getAllFiles();
