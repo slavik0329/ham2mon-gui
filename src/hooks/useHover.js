@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from 'react';
 
 export function useHover() {
   const [value, setValue] = useState(false);
@@ -21,7 +21,7 @@ export function useHover() {
         };
       }
     },
-    [ref.current] // Recall only if ref changes
+    [], // Recall only if ref changes
   );
 
   return [ref, value];

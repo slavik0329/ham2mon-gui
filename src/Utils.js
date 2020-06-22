@@ -16,7 +16,8 @@ export const sec2time = (timeInSeconds, useHours) => {
   return hoursStr + pad(minutes, 2) + ':' + pad(seconds, 2);
 };
 
-export const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+export const isChrome =
+  /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
 export const getLocalStorage = () => {
   const a = {};
@@ -28,7 +29,7 @@ export const getLocalStorage = () => {
   return JSON.stringify(a);
 };
 
-export const writeLocalStorage = data => {
+export const writeLocalStorage = (data) => {
   const o = JSON.parse(data);
   for (const property in o) {
     if (o.hasOwnProperty(property)) {
@@ -39,7 +40,10 @@ export const writeLocalStorage = data => {
 
 export const download = (filename, text) => {
   const pom = document.createElement('a');
-  pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  pom.setAttribute(
+    'href',
+    'data:text/plain;charset=utf-8,' + encodeURIComponent(text),
+  );
   pom.setAttribute('download', filename);
 
   if (document.createEvent) {
@@ -57,7 +61,9 @@ export function getFreqStats(statFiles) {
     return totals;
   }, {});
 
-  const sortedStats = Object.entries(statObj).sort((a, b) => a[1] > b[1] ? -1 : 1);
+  const sortedStats = Object.entries(statObj).sort((a, b) =>
+    a[1] > b[1] ? -1 : 1,
+  );
 
-  return sortedStats.map(stat => ({freq: stat[0], count: stat[1]}));
+  return sortedStats.map((stat) => ({freq: stat[0], count: stat[1]}));
 }
