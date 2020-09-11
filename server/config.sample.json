@@ -1,3 +1,4 @@
 {
-  "wavDir": "/path/to/wav/files/"
+  "wavDir": "/path/to/wav/files/",
+  "minWavFileSize": 60000
 }
