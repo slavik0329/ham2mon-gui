@@ -45,6 +45,7 @@ function App() {
       padding: 10,
       borderRadius: 4,
       boxShadow: '1px 1px 2px #999',
+      width: 1,
     },
     buttons: {
       display: 'flex',
