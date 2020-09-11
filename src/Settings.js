@@ -250,8 +250,8 @@ export const Settings = ({
           />
 
           <DataItem
-            title="Total audio"
-            type={'MB'}
+            title="Total audio duration"
+            type={''}
             value={sec2time(dirSize / 16000, true)}
           />
         </div>
