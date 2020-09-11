@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState, useCallback} from 'react';
 import axios from 'axios';
 import Call from './Call';
-import {useLocalStorage} from './useLocalStorage';
+import {useLocalStorage} from './hooks/useLocalStorage';
 import './App.css';
 import produce from 'immer';
 import {BooleanOption} from './BooleanOption';

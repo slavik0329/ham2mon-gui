@@ -3,7 +3,7 @@ import {primary, primary2, primary4} from './color';
 import {DataItem} from './DataItem';
 import {FaTimes} from 'react-icons/fa';
 import {download, getLocalStorage, sec2time, writeLocalStorage} from './Utils';
-import {useLocalStorage} from './useLocalStorage';
+import {useLocalStorage} from './hooks/useLocalStorage';
 import {Button} from './Button';
 import {Bar} from 'react-chartjs-2';
 import Select from 'react-select';
