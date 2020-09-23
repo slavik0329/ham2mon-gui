@@ -67,18 +67,11 @@ export function NowPlaying({call, freqData}) {
   };
   const [tickOn, setTickOn] = useState(true);
 
-  const tickRef = useState(true);
-
-  function tick() {
-    tickRef.current = !tickRef.current;
-
-    setTickOn(tickRef.current);
-    setTimeout(tick, 1000);
-  }
-
   useEffect(() => {
-    tick();
-  }, [tick]);
+    setTimeout(function () {
+      setTickOn(!tickOn)
+    }, 1000);
+  }, [tickOn]);
 
   let callInfo = {
     file: 'Not Playing',
