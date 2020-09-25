@@ -105,7 +105,7 @@ function App() {
   const [likedArr, setLikedArr] = useLocalStorage('likedArr', []);
   const [hiddenArr, setHiddenArr] = useLocalStorage('hiddenArr', []);
   const [autoplay, setAutoplay] = useLocalStorage('autoplay', true);
-  const [autoloadDelay, setAutoloadDelay] = useLocalStorage('setAutoloadDelay', 60);
+  const [autoloadDelay, setAutoloadDelay] = useLocalStorage('setAutoloadDelay', 0);
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
   const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
@@ -158,12 +158,12 @@ function App() {
 
       setDirSize(dirSize);
       setFreeSpace(freeSpace);
-      setCalls(c => c.concat(files));
 
-      // set lastUpdate to trigger autoload
       if (files.length > 0) {
+        setCalls(c => c.concat(files));
         newestCall = files.reduce((acc, cur) => Math.max(acc, cur.time), 0);
       }
+      // set lastUpdate to trigger autoload
       setLastUpdate(([lastCallTime, lastCheckTime]) =>
         [(newestCall ? newestCall : lastCallTime), now]
       );
@@ -231,9 +231,7 @@ function App() {
     );
   }
 
-  useEffect(() => {
-    filteredCallRefs.current = new Array(filteredCalls.length);
-  }, [filteredCalls]);
+  filteredCallRefs.current = new Array(filteredCalls.length);
 
   const selectedCallIndex = filteredCalls.findIndex(
     (call) => call.file === selected,
@@ -241,13 +239,6 @@ function App() {
 
   const playNext = (skipAmount = 1) => {
     const nextCall = filteredCalls[selectedCallIndex + skipAmount];
-
-    // Doesn't scroll now because of new scoll component
-    // try {
-    //   filteredCallRefs.current[selectedCallIndex + skipAmount].scrollIntoView({block: 'center'});
-    // } catch (e) {
-    //
-    // }
 
     setListenedArr([...listenedArr, selected]);
     if (nextCall) {
@@ -262,8 +253,13 @@ function App() {
   useEffect(() => {
     if (!filteredCalls.length || (selectedCallIndex === filteredCalls.length-1) || !callWaiting || !autoplay) return;
     setCallWaiting(false);
+    // scroll the newly added call into view
+    try {
+      filteredCallRefs.current[selectedCallIndex + 1].scrollIntoView({block: 'nearest'});
+    } catch (ignore) {
+    }
     playNext();
-  }, [calls, callWaiting]);
+  }, [calls, callWaiting, selected]);
 
   function pause(event) {
     event.preventDefault();
