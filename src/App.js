@@ -237,6 +237,13 @@ function App() {
     (call) => call.file === selected,
   );
 
+  const scrollIntoView = (offset = 1, options = {block: 'nearest'}) => {
+    try {
+      filteredCallRefs.current[selectedCallIndex + offset].scrollIntoView(options);
+    } catch (ignore) {
+    }
+  };
+
   const playNext = (skipAmount = 1) => {
     const nextCall = filteredCalls[selectedCallIndex + skipAmount];
 
@@ -254,10 +261,7 @@ function App() {
     if (!filteredCalls.length || (selectedCallIndex === filteredCalls.length-1) || !callWaiting || !autoplay) return;
     setCallWaiting(false);
     // scroll the newly added call into view
-    try {
-      filteredCallRefs.current[selectedCallIndex + 1].scrollIntoView({block: 'nearest'});
-    } catch (ignore) {
-    }
+    scrollIntoView();
     playNext();
   }, [calls, callWaiting, selected]);
 
@@ -503,7 +507,7 @@ function App() {
           </div>
         ) : null}
         <div style={styles.rightOptionsBlock}>
-          <NowPlaying call={selectedCall} freqData={freqData} />
+          <NowPlaying call={selectedCall} freqData={freqData} scrollIntoView={scrollIntoView} />
           <audio
             ref={audioRef}
             style={styles.audio}
