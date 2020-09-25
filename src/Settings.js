@@ -22,6 +22,8 @@ export const Settings = ({
   setShowOnlyFreq,
   handleDeleteBefore,
   freqData,
+  autoloadDelay,
+  setAutoloadDelay,
 }) => {
   const styles = {
     outerContainer: {
@@ -170,10 +172,55 @@ export const Settings = ({
     [styles.timeSelectItem],
   );
 
+  const delaySelect = useMemo(
+    () => [
+      {
+        label: <div style={styles.timeSelectItem}>Never</div>,
+        value: 0,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>5 seconds</div>,
+        value: 5,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>30 seconds</div>,
+        value: 30,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>1 minute</div>,
+        value: 60,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>2 minutes</div>,
+        value: 60 * 2,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>5 minutes</div>,
+        value: 60 * 5,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>10 minutes</div>,
+        value: 60 * 10,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>30 minutes</div>,
+        value: 60 * 30,
+      },
+      {
+        label: <div style={styles.timeSelectItem}>1 hour</div>,
+        value: 60 * 60,
+      },
+    ],
+    [styles.timeSelectItem],
+  );
+
   const [removeBefore, setRemoveBefore] = useState(60 * 60 * 24);
 
   const callsSinceSelectValue = timeSelect.find(
     (time) => time.value === showSince,
+  );
+  const autoloadDelaySelectValue = delaySelect.find(
+    (time) => time.value === autoloadDelay,
   );
   const removeBeforeSelectValue = timeSelect.find(
     (time) => time.value === removeBefore,
@@ -306,6 +353,29 @@ export const Settings = ({
             })}
             onChange={(res) => {
               setShowSince(res.value);
+            }}
+          />
+        </div>
+
+        <div style={styles.selectBlock}>
+          <span style={styles.selectBlockText}>Autoload calls every</span>
+
+          <Select
+            style={styles.select}
+            value={autoloadDelaySelectValue}
+            options={delaySelect}
+            styles={customStyles}
+            theme={(theme) => ({
+              ...theme,
+              borderRadius: 4,
+              colors: {
+                ...theme.colors,
+                primary25: primary2,
+                primary: primary,
+              },
+            })}
+            onChange={(res) => {
+              setAutoloadDelay(res.value);
             }}
           />
         </div>
