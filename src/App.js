@@ -484,7 +484,7 @@ function App() {
               playNext();
             }}
             // set autoPlay for taps and keyboard input
-            autoPlay="true"
+            autoPlay={true}
             preload={'none'}
             src={selected ? `${serverUrl}static/${selected}` : null}
             controls
