@@ -218,9 +218,9 @@ function App() {
     //
     // }
 
+    setListenedArr([...listenedArr, selected]);
     if (nextCall) {
       setSelected(nextCall.file);
-      setListenedArr([...listenedArr, nextCall.file]);
     }
   };
 
@@ -525,9 +525,9 @@ function App() {
                     freqData={freqData}
                     setFreqData={setFreqData}
                     onClick={() => {
+                      setListenedArr([...listenedArr, selected]);
                       setSelected(call.file);
 
-                      setListenedArr([...listenedArr, call.file]);
                     }}
                     onLike={() => {
                       setLikedArr([...likedArr, call.freq]);
