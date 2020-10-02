@@ -218,9 +218,9 @@ function App() {
     //
     // }
 
+    setListenedArr([...listenedArr, selected]);
     if (nextCall) {
       setSelected(nextCall.file);
-      setListenedArr([...listenedArr, nextCall.file]);
     }
   };
 
@@ -483,7 +483,8 @@ function App() {
 
               playNext();
             }}
-            autoPlay={autoplay}
+            // set autoPlay for taps and keyboard input
+            autoPlay={true}
             preload={'none'}
             src={selected ? `${serverUrl}static/${selected}` : null}
             controls
@@ -525,9 +526,9 @@ function App() {
                     freqData={freqData}
                     setFreqData={setFreqData}
                     onClick={() => {
+                      setListenedArr([...listenedArr, selected]);
                       setSelected(call.file);
 
-                      setListenedArr([...listenedArr, call.file]);
                     }}
                     onLike={() => {
                       setLikedArr([...likedArr, call.freq]);
