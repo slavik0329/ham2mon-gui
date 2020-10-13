@@ -4,7 +4,7 @@ import {isChrome} from './Utils';
 import {secondary, secondary25} from './color';
 import {useWindowSize} from './hooks/useWindowSize';
 
-export function NowPlaying({call, freqData}) {
+export function NowPlaying({call, freqData, scrollIntoView}) {
   const windowSize = useWindowSize();
 
   const styles = {
@@ -84,7 +84,12 @@ export function NowPlaying({call, freqData}) {
   const freqItem = freqData.find((freqItem) => freqItem.freq === callInfo.freq);
 
   return (
-    <div style={styles.container}>
+    <div
+      style={styles.container}
+      onClick={() => {
+        scrollIntoView(0, {block: 'center'});
+      }}
+    >
       <div style={styles.innerBlock}>
         <div style={styles.leftBlock}>
           <div style={styles.nowPlaying}>{call ? 'Now Playing' : ''}</div>

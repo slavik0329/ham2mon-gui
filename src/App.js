@@ -14,6 +14,7 @@ import {primary, primary2, primary4, secondary25} from './color';
 import ReactList from 'react-list';
 import {Settings} from './Settings';
 import {useWindowSize} from './hooks/useWindowSize';
+import dayjs from 'dayjs';
 
 function App() {
   const windowSize = useWindowSize();
@@ -93,6 +94,9 @@ function App() {
   const [loadError, setLoadError] = useState(false);
   const [freqStats, setFreqStats] = useState([]);
   const [loading, setLoading] = useState(true);
+  // array of [newest_call_time, last_checked_time]
+  const [lastUpdate, setLastUpdate] = useState([null, null]);
+  const [callWaiting, setCallWaiting] = useState(false);
 
   const [mobileSettingsOpen, setMobileSettingsOpen] = useLocalStorage(
     'mobileSettingsOpen',
@@ -102,6 +106,7 @@ function App() {
   const [likedArr, setLikedArr] = useLocalStorage('likedArr', []);
   const [hiddenArr, setHiddenArr] = useLocalStorage('hiddenArr', []);
   const [autoplay, setAutoplay] = useLocalStorage('autoplay', true);
+  const [autoloadDelay, setAutoloadDelay] = useLocalStorage('setAutoloadDelay', 0);
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
   const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
@@ -136,19 +141,33 @@ function App() {
     filteredFreqs = uniqueFreqs.filter((freq) => hiddenArr.includes(freq));
   }
 
-  const getData = useCallback(async () => {
+  const getData = useCallback(async (fromTime) => {
     setLoading(true);
+    const now = Math.floor(Date.now() / 1000);
+    let newestCall = null;
+    if (!fromTime) {
+      fromTime = now - showSince;
+      newestCall = now;
+    }
 
     try {
+      console.log(`requesting calls since ${dayjs(fromTime * 1000).format('YYYY-MM-DD HH:mm:ss')}`);
       const result = await axios.post(serverUrl + 'data', {
-        fromTime: Math.floor(Date.now() / 1000) - showSince,
+        fromTime: fromTime
       });
-
       const {files, dirSize, freeSpace} = result.data;
 
       setDirSize(dirSize);
       setFreeSpace(freeSpace);
-      setCalls(files);
+
+      if (files.length > 0) {
+        setCalls(c => c.concat(files));
+        newestCall = files.reduce((acc, cur) => Math.max(acc, cur.time), 0);
+      }
+      // set lastUpdate to trigger autoload
+      setLastUpdate(([lastCallTime, lastCheckTime]) =>
+        [(newestCall ? newestCall : lastCallTime), now]
+      );
     } catch (e) {
       setLoadError(true);
     }
@@ -156,10 +175,22 @@ function App() {
     setLoading(false);
   }, [serverUrl, showSince]);
 
+  // poll for new calls
+  useEffect(() => {
+    if (autoloadDelay <= 0) return;
+    const [lastCallTime, lastCheckTime] = lastUpdate;
+    if (!lastCallTime) return;
+    const timer = setTimeout(() => {
+      // request all calls since the last call
+      getData(lastCallTime + 0.001);
+    }, autoloadDelay * 1000);
+    return () => clearTimeout(timer);
+  }, [lastUpdate, getData, autoloadDelay]);
+
   useEffect(() => {
     setCalls([]);
     getData();
-  }, [getData, showSince]);
+  }, [getData]);
 
   useEffect(() => {
     const orderedStats = getFreqStats(calls);
@@ -201,29 +232,39 @@ function App() {
     );
   }
 
-  useEffect(() => {
-    filteredCallRefs.current = new Array(filteredCalls.length);
-  }, [filteredCalls]);
+  filteredCallRefs.current = new Array(filteredCalls.length);
+
+  const selectedCallIndex = filteredCalls.findIndex(
+    (call) => call.file === selected,
+  );
+
+  const scrollIntoView = (offset = 1, options = {block: 'nearest'}) => {
+    try {
+      filteredCallRefs.current[selectedCallIndex + offset].scrollIntoView(options);
+    } catch (ignore) {
+    }
+  };
 
   const playNext = (skipAmount = 1) => {
-    const selectedCallIndex = filteredCalls.findIndex(
-      (call) => call.file === selected,
-    );
-
     const nextCall = filteredCalls[selectedCallIndex + skipAmount];
-
-    // Doesn't scroll now because of new scoll component
-    // try {
-    //   filteredCallRefs.current[selectedCallIndex + skipAmount].scrollIntoView({block: 'center'});
-    // } catch (e) {
-    //
-    // }
 
     setListenedArr([...listenedArr, selected]);
     if (nextCall) {
       setSelected(nextCall.file);
+    } else {
+      // nothing to play yet, but try again when new calls come in
+      setCallWaiting(true);
     }
   };
+
+  // automatically play new calls as they come in
+  useEffect(() => {
+    if (!filteredCalls.length || (selectedCallIndex === filteredCalls.length-1) || !callWaiting || !autoplay) return;
+    setCallWaiting(false);
+    // scroll the newly added call into view
+    scrollIntoView();
+    playNext();
+  }, [calls, callWaiting, selected]);
 
   function pause(event) {
     event.preventDefault();
@@ -300,6 +341,8 @@ function App() {
         setShowOnlyFreq={setShowOnlyFreq}
         handleDeleteBefore={handleDeleteBefore}
         freqData={freqData}
+        autoloadDelay={autoloadDelay}
+        setAutoloadDelay={setAutoloadDelay}
       />
       <div ref={optionsBlockRef} style={styles.optionsBlock}>
         {windowSize.width >= 600 || mobileSettingsOpen ? (
@@ -465,7 +508,7 @@ function App() {
           </div>
         ) : null}
         <div style={styles.rightOptionsBlock}>
-          <NowPlaying call={selectedCall} freqData={freqData} />
+          <NowPlaying call={selectedCall} freqData={freqData} scrollIntoView={scrollIntoView} />
           <audio
             ref={audioRef}
             style={styles.audio}
@@ -506,7 +549,7 @@ function App() {
             No calls to display. Try changing frequency.
           </div>
         ) : null}
-        {loading ? (
+        {loading && filteredCalls.length === 0 ? (
           <div style={styles.loading}>Loading calls...</div>
         ) : (
           <ReactList
@@ -529,7 +572,6 @@ function App() {
                     onClick={() => {
                       setListenedArr([...listenedArr, selected]);
                       setSelected(call.file);
-
                     }}
                     onLike={() => {
                       setLikedArr([...likedArr, call.freq]);
