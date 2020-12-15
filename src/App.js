@@ -104,7 +104,7 @@ function App() {
   const [autoplay, setAutoplay] = useLocalStorage('autoplay', true);
   const [freqData, setFreqData] = useLocalStorage('freqData', []);
   const [showRead, setShowRead] = useLocalStorage('showRead', true);
-  const [showOnlyFreq, setShowOnlyFreq] = useLocalStorage('showOnlyFreq', '');
+  const [selectedFreqs, setSelectedFreqs] = useLocalStorage('selectedFreqs', ["0"]);
   const [serverIP, setServerIP] = useLocalStorage(
     'setServerIP',
     window.location.hostname,
@@ -167,7 +167,7 @@ function App() {
     setFreqStats(orderedStats);
   }, [calls, showSince]);
 
-  const frequencyListItems = filteredFreqs.map((freq) => {
+  const frequencyListItems = [...filteredFreqs].sort().map((freq) => {
     const freqItem = freqData.find((freqItem) => freqItem.freq === freq);
     const unlistenedCount = unlistenedCalls.filter((call) => call.freq === freq)
       .length;
@@ -179,20 +179,14 @@ function App() {
     };
   });
 
-  useEffect(() => {
-    if (!showOnlyFreq && frequencyListItems.length) {
-      setShowOnlyFreq(frequencyListItems[0].freq);
-    }
-  }, [frequencyListItems, setShowOnlyFreq, showOnlyFreq]);
-
   let filteredCalls = calls.filter((call) => !hiddenArr.includes(call.freq));
 
   if (showHidden) {
     filteredCalls = calls.filter((call) => hiddenArr.includes(call.freq));
   }
 
-  if (showOnlyFreq) {
-    filteredCalls = filteredCalls.filter((call) => call.freq === showOnlyFreq);
+  if (selectedFreqs) {
+    filteredCalls = filteredCalls.filter((call) => selectedFreqs.includes(call.freq));
   }
 
   if (!showRead) {
@@ -269,6 +263,8 @@ function App() {
     ),
   }));
 
+  const selectedFreqItems = selectedFreqs ? selectOptions.filter((opt) => selectedFreqs.includes(opt.value)) : [];
+
   const customStyles = {
     control: (base, state) => ({
       ...base,
@@ -297,7 +293,7 @@ function App() {
         freqStats={freqStats}
         showSince={showSince}
         setShowSince={setShowSince}
-        setShowOnlyFreq={setShowOnlyFreq}
+        setSelectedFreqs={setSelectedFreqs}
         handleDeleteBefore={handleDeleteBefore}
         freqData={freqData}
       />
@@ -358,7 +354,7 @@ function App() {
                   if (
                     !window.confirm(
                       `Are you sure you want to delete all listened audio${
-                        showOnlyFreq ? ' on this freq?' : '?'
+                        selectedFreqs ? ' on this freq?' : '?'
                       }`,
                     )
                   ) {
@@ -367,11 +363,11 @@ function App() {
 
                   let filesToDelete;
 
-                  if (showOnlyFreq) {
+                  if (selectedFreqs) {
                     filesToDelete = calls
                       .filter(
                         (call) =>
-                          call.freq === showOnlyFreq &&
+                          selectedFreqs.includes(call.freq) &&
                           listenedArr.includes(call.file),
                       )
                       .map((call) => call.file);
@@ -385,7 +381,7 @@ function App() {
                     files: filesToDelete,
                   });
 
-                  setShowOnlyFreq('');
+                  setSelectedFreqs([]);
                   getData();
                 }}
               />
@@ -397,7 +393,7 @@ function App() {
                   if (
                     !window.confirm(
                       `Are you sure you want to mark ${
-                        showOnlyFreq ? 'this frequency' : 'all calls'
+                        selectedFreqs ? 'this frequency' : 'all calls'
                       } as read?`,
                     )
                   ) {
@@ -406,9 +402,9 @@ function App() {
 
                   let itemsToMark;
 
-                  if (showOnlyFreq) {
+                  if (selectedFreqs) {
                     itemsToMark = unlistenedCalls.filter(
-                      (call) => call.freq === showOnlyFreq,
+                      (call) => selectedFreqs.includes(call.freq),
                     );
                   } else {
                     itemsToMark = calls;
@@ -429,10 +425,9 @@ function App() {
             <div>
               <Select
                 style={styles.select}
-                value={selectOptions.find(
-                  (option) => option.value === showOnlyFreq,
-                )}
+                value={selectedFreqItems}
                 placeholder={'Select a frequency'}
+                isMulti={true}
                 options={selectOptions}
                 styles={customStyles}
                 theme={(theme) => ({
@@ -445,7 +440,11 @@ function App() {
                   },
                 })}
                 onChange={(res) => {
-                  setShowOnlyFreq(res.label === 'No filter' ? '' : res.value);
+                  if (res) {
+                    setSelectedFreqs(res.map((r) => r.value));
+                  } else {
+                    setSelectedFreqs([]);
+                  }
 
                   setTimeout(() => {
                     window.scrollTo(0, document.body.scrollHeight);
