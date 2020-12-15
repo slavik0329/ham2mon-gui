@@ -167,7 +167,7 @@ function App() {
     setFreqStats(orderedStats);
   }, [calls, showSince]);
 
-  const frequencyListItems = filteredFreqs.map((freq) => {
+  const frequencyListItems = [...filteredFreqs].sort().map((freq) => {
     const freqItem = freqData.find((freqItem) => freqItem.freq === freq);
     const unlistenedCount = unlistenedCalls.filter((call) => call.freq === freq)
       .length;
