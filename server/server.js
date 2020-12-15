@@ -30,12 +30,19 @@ function getSizePromise(dir) {
 }
 
 let wavDir;
+let minWavFileSize;
 
 try {
   wavDir = require('./config').wavDir;
+  minWavFileSize = require('./config').minWavFileSize;
 
   if (!wavDir) {
     console.log("Error: You must have a wavDir set in config file!");
+    process.exit();
+  }
+
+  if (!minWavFileSize) {
+    console.log("Error: You must have a minWavFileSize set in config file!");
     process.exit();
   }
 } catch (e) {
@@ -144,7 +151,7 @@ async function getFileData() {
 
   return fileData.filter(
     file => {
-      return file.size > 60000
+      return file.size > minWavFileSize
     }
   );
 }
