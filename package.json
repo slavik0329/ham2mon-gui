@@ -9,7 +9,7 @@
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
     "dayjs": "^1.8.23",
-    "immer": "^6.0.3",
+    "immer": "^9.0.6",
     "js-cookie": "^2.2.1",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
